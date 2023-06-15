@@ -15,21 +15,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 @Composable
-fun SessionScreen() {
+fun SessionScreen(viewModel: AuthViewModel) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
         Text(text = "YOU HAVE LOGGED IN")
-        Button(onClick = { }) {
+        Button(onClick = viewModel::logOut) {
             Text("Log Out")
         }
     }
 }
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(viewModel: AuthViewModel) {
 
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
@@ -56,18 +56,18 @@ fun SignUpScreen() {
             placeholder = { Text(text = "Password") }
         )
 
-        Button(onClick = { }) {
+        Button(onClick = viewModel::signUp) {
             Text(text = "Sign Up")
         }
 
-        TextButton(onClick = { }) {
+        TextButton(onClick = viewModel::showLogin) {
             Text(text = "Already have an account? Login.")
         }
     }
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: AuthViewModel) {
 
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
@@ -88,18 +88,18 @@ fun LoginScreen() {
             placeholder = { Text(text = "Password") }
         )
 
-        Button(onClick = { }) {
+        Button(onClick = viewModel::login) {
             Text(text = "Login")
         }
 
-        TextButton(onClick = { }) {
+        TextButton(onClick = viewModel::showSignUp) {
             Text(text = "Don't have an account? Sign up.")
         }
     }
 }
 
 @Composable
-fun VerificationCodeScreen() {
+fun VerificationCodeScreen(viewModel: AuthViewModel) {
 
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
@@ -112,7 +112,7 @@ fun VerificationCodeScreen() {
             placeholder = { Text(text = "Verification Code") }
         )
 
-        Button(onClick = { }) {
+        Button(onClick = viewModel::verifyCode) {
             Text(text = "Verify")
         }
     }

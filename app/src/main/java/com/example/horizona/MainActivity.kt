@@ -28,8 +28,31 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SignUpScreen()
+                    AppNavigator()
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun AppNavigator() {
+        val navController = rememberNavController()
+        viewModel.navigateTo = {
+            navController.navigate(it)
+        }
+
+        NavHost(navController = navController, startDestination = "login") {
+            composable("login") {
+                LoginScreen(viewModel = viewModel)
+            }
+            composable("signUp") {
+                SignUpScreen(viewModel = viewModel)
+            }
+            composable("verify") {
+                VerificationCodeScreen(viewModel = viewModel)
+            }
+            composable("session") {
+                SessionScreen(viewModel = viewModel)
             }
         }
     }
