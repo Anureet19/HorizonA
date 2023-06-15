@@ -28,3 +28,41 @@ fun SessionScreen() {
     }
 }
 
+@Composable
+fun SignUpScreen() {
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        TextField(
+            value = "",
+            onValueChange = { },
+            placeholder = { Text(text = "Username") }
+        )
+
+        TextField(
+            value = "",
+            onValueChange = { },
+            placeholder = { Text(text = "Email") }
+        )
+
+        TextField(
+            value = "",
+            onValueChange = { },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            placeholder = { Text(text = "Password") }
+        )
+
+        Button(onClick = { }) {
+            Text(text = "Sign Up")
+        }
+
+        TextButton(onClick = { }) {
+            Text(text = "Already have an account? Login.")
+        }
+    }
+}
+
