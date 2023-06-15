@@ -66,3 +66,55 @@ fun SignUpScreen() {
     }
 }
 
+@Composable
+fun LoginScreen() {
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        TextField(
+            value = "",
+            onValueChange = { },
+            placeholder = { Text(text = "Username") }
+        )
+
+        TextField(
+            value = "",
+            onValueChange = { },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            placeholder = { Text(text = "Password") }
+        )
+
+        Button(onClick = { }) {
+            Text(text = "Login")
+        }
+
+        TextButton(onClick = { }) {
+            Text(text = "Don't have an account? Sign up.")
+        }
+    }
+}
+
+@Composable
+fun VerificationCodeScreen() {
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        TextField(
+            value = "",
+            onValueChange = { },
+            placeholder = { Text(text = "Verification Code") }
+        )
+
+        Button(onClick = { }) {
+            Text(text = "Verify")
+        }
+    }
+}
+
