@@ -39,7 +39,19 @@ fun SignUpScreen(viewModel: AuthViewModel) {
         TextField(
             value = "",
             onValueChange = { },
-            placeholder = { Text(text = "Username") }
+            placeholder = { Text(text = "Name") }
+        )
+
+        TextField(
+            value = "",
+            onValueChange = { },
+            placeholder = { Text(text = "Address") }
+        )
+
+        TextField(
+            value = "",
+            onValueChange = { },
+            placeholder = { Text(text = "Phone Number") }
         )
 
         TextField(
