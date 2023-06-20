@@ -25,10 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -50,6 +52,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -370,9 +373,7 @@ fun WelcomeScreen() {
 
 @Composable
 fun AgriGrowScreen() {
-    val averageSansFontFamily = FontFamily(
-        Font(R.font.average_sans, FontWeight.Normal)
-    )
+    val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
     val screenPadding = with(LocalDensity.current) { 16.dp }
@@ -385,53 +386,69 @@ fun AgriGrowScreen() {
     ) {
         LeftBox()
         RightBox()
-        TextFields()
+        TextFields(modifier = Modifier.align(Alignment.Center))
 
         Text(
             text = "Sign Up",
             modifier = Modifier
-                .offset(26.dp, 98.dp)
-                .width(129.dp)
-                .height(52.dp)
-                .background(Color.Transparent)
-                .zIndex(1f), // Set higher zIndex to appear above other elements
+                .align(Alignment.TopCenter)
+                .padding(top = 98.dp),
             fontFamily = averageSansFontFamily,
             fontWeight = FontWeight.Normal,
             fontSize = 36.4127.sp,
-            lineHeight = 44.sp, // Adjust line height as per your preference
+            lineHeight = 44.sp,
             color = Color.Black
         )
 
-        Button(
-            onClick = { /* Handle button click */ },
-            modifier = Modifier
-                .width(248.dp)
-                .height(60.dp)
-                .offset(x = 65.dp, y = 541.dp)
-                .background(
-                    color = Color(0xFF52B669),
-                    shape = RoundedCornerShape(60f)
-                )
-                .shadow(
-                    elevation = 10.dp,
-                    shape = RoundedCornerShape(60f)
-                ),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Sign Up",
-                fontFamily = averageSansFontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                lineHeight = 23.sp,
-                textAlign = TextAlign.Center,
-                letterSpacing = 0.08.em,
-                color = Color.White
+            Button(
+                onClick = { /* Handle button click */ },
+                modifier = Modifier
+                    .width(248.dp)
+                    .height(60.dp)
+                    .offset(y=-(100).dp)
+                    .padding(top = 24.dp),
+                shape = RoundedCornerShape(60f),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+            ) {
+                Text(
+                    text = "Sign Up",
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    lineHeight = 23.sp,
+                    textAlign = TextAlign.Center,
+                    letterSpacing = 0.08.em,
+                    color = Color.White
+                )
+            }
+
+            ClickableText(
+                text = AnnotatedString("Already have an account? Login"),
+                onClick = { offset ->
+                    // Handle click event
+                },
+                modifier = Modifier
+                    .padding(top = 16.dp),
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal)),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    lineHeight = 34.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color(0xFF5B5B5E)
+                )
             )
+
+
         }
+
     }
 }
-
 
 @Composable
 fun LeftBox() {
@@ -460,6 +477,7 @@ fun RightBox() {
     )
 }
 
+
 @Composable
 fun TextFields(modifier: Modifier = Modifier) {
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
@@ -472,181 +490,179 @@ fun TextFields(modifier: Modifier = Modifier) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
-    OutlinedTextField(
-        value = name.value,
-        onValueChange = { name.value = it },
-        modifier = Modifier
-            .fillMaxWidth(0.933f)
-            .padding(start = screenPadding)
-            .padding(top = screenPadding * 8),
-        textStyle = TextStyle(
-            fontFamily = alatsiFontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
-            color = Color.Black
-        ),
-        label = {
-            Text(
-                text = "Full Name",
+    Column(modifier = modifier) {
+        OutlinedTextField(
+            value = name.value,
+            onValueChange = { name.value = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = screenPadding, top = screenPadding),
+            textStyle = TextStyle(
                 fontFamily = alatsiFontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 lineHeight = 20.sp,
-                color = Color(0xFF9796A1)
+                color = Color.Black
+            ),
+            label = {
+                Text(
+                    text = "Full Name",
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color(0xFF9796A1)
+                )
+            },
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.Black,
+                focusedBorderColor = Color(0xFE724C4D),
+                unfocusedBorderColor = Color(0xFE724C4D),
+                focusedLabelColor = Color(0xFF9796A1),
+                unfocusedLabelColor = Color(0xFF9796A1),
+                backgroundColor = Color.White
             )
-        },
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.Black,
-            focusedBorderColor = Color(0xFE724C4D),
-            unfocusedBorderColor = Color(0xFE724C4D),
-            focusedLabelColor = Color(0xFF9796A1),
-            unfocusedLabelColor = Color(0xFF9796A1),
-            backgroundColor = Color.White
         )
-    )
 
-    OutlinedTextField(
-        value = address.value,
-        onValueChange = { address.value = it },
-        modifier = Modifier
-            .fillMaxWidth(0.933f)
-            .padding(start = screenPadding)
-            .padding(top = screenPadding * 14),
-        textStyle = TextStyle(
-            fontFamily = alatsiFontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
-            color = Color.Black
-        ),
-        label = {
-            Text(
-                text = "Address",
+        OutlinedTextField(
+            value = address.value,
+            onValueChange = { address.value = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = screenPadding, top = screenPadding),
+            textStyle = TextStyle(
                 fontFamily = alatsiFontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 lineHeight = 20.sp,
-                color = Color(0xFF9796A1)
+                color = Color.Black
+            ),
+            label = {
+                Text(
+                    text = "Address",
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color(0xFF9796A1)
+                )
+            },
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.Black,
+                focusedBorderColor = Color(0xFF2372CF),
+                unfocusedBorderColor = Color(0xFF2372CF),
+                focusedLabelColor = Color(0xFF9796A1),
+                unfocusedLabelColor = Color(0xFF9796A1),
+                backgroundColor = Color.White
             )
-        },
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.Black,
-            focusedBorderColor = Color(0xFE724C4D),
-            unfocusedBorderColor = Color(0xFE724C4D),
-            focusedLabelColor = Color(0xFF9796A1),
-            unfocusedLabelColor = Color(0xFF9796A1),
-            backgroundColor = Color.White
         )
-    )
 
-    OutlinedTextField(
-        value = phoneNumber.value,
-        onValueChange = { phoneNumber.value = it },
-        modifier = Modifier
-            .fillMaxWidth(0.933f)
-            .padding(start = screenPadding)
-            .padding(top = screenPadding * 20),
-        textStyle = TextStyle(
-            fontFamily = alatsiFontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
-            color = Color.Black
-        ),
-        label = {
-            Text(
-                text = "Phone Number",
+        OutlinedTextField(
+            value = phoneNumber.value,
+            onValueChange = { phoneNumber.value = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = screenPadding, top = screenPadding),
+            textStyle = TextStyle(
                 fontFamily = alatsiFontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 lineHeight = 20.sp,
-                color = Color(0xFF9796A1)
+                color = Color.Black
+            ),
+            label = {
+                Text(
+                    text = "Phone Number",
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color(0xFF9796A1)
+                )
+            },
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.Black,
+                focusedBorderColor = Color(0xFF34A853),
+                unfocusedBorderColor = Color(0xFF34A853),
+                focusedLabelColor = Color(0xFF9796A1),
+                unfocusedLabelColor = Color(0xFF9796A1),
+                backgroundColor = Color.White
             )
-        },
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.Black,
-            focusedBorderColor = Color(0xFE724C4D),
-            unfocusedBorderColor = Color(0xFE724C4D),
-            focusedLabelColor = Color(0xFF9796A1),
-            unfocusedLabelColor = Color(0xFF9796A1),
-            backgroundColor = Color.White
         )
-    )
 
-    OutlinedTextField(
-        value = email.value,
-        onValueChange = { email.value = it },
-        modifier = Modifier
-            .fillMaxWidth(0.933f)
-            .padding(start = screenPadding)
-            .padding(top = screenPadding * 26),
-        textStyle = TextStyle(
-            fontFamily = alatsiFontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
-            color = Color.Black
-        ),
-        label = {
-            Text(
-                text = "Email",
+        OutlinedTextField(
+            value = email.value,
+            onValueChange = { email.value = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = screenPadding, top = screenPadding),
+            textStyle = TextStyle(
                 fontFamily = alatsiFontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 lineHeight = 20.sp,
-                color = Color(0xFF9796A1)
+                color = Color.Black
+            ),
+            label = {
+                Text(
+                    text = "Email",
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color(0xFF9796A1)
+                )
+            },
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.Black,
+                focusedBorderColor = Color(0xFE724C4D),
+                unfocusedBorderColor = Color(0xFE724C4D),
+                focusedLabelColor = Color(0xFF9796A1),
+                unfocusedLabelColor = Color(0xFF9796A1),
+                backgroundColor = Color.White
             )
-        },
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.Black,
-            focusedBorderColor = Color(0xFE724C4D),
-            unfocusedBorderColor = Color(0xFE724C4D),
-            focusedLabelColor = Color(0xFF9796A1),
-            unfocusedLabelColor = Color(0xFF9796A1),
-            backgroundColor = Color.White
         )
-    )
 
-    OutlinedTextField(
-        value = password.value,
-        onValueChange = { password.value = it },
-        modifier = Modifier
-            .fillMaxWidth(0.933f)
-            .padding(start = screenPadding)
-            .padding(top = screenPadding * 32),
-        textStyle = TextStyle(
-            fontFamily = alatsiFontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
-            color = Color.Black
-        ),
-        label = {
-            Text(
-                text = "Password",
+        OutlinedTextField(
+            value = password.value,
+            onValueChange = { password.value = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = screenPadding, top = screenPadding),
+            textStyle = TextStyle(
                 fontFamily = alatsiFontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 lineHeight = 20.sp,
-                color = Color(0xFF9796A1)
+                color = Color.Black
+            ),
+            label = {
+                Text(
+                    text = "Password",
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color(0xFF9796A1)
+                )
+            },
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.Black,
+                focusedBorderColor = Color(0xFF2372CF),
+                unfocusedBorderColor = Color(0xFF2372CF),
+                focusedLabelColor = Color(0xFF9796A1),
+                unfocusedLabelColor = Color(0xFF9796A1),
+                backgroundColor = Color.White
             )
-        },
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.Black,
-            focusedBorderColor = Color(0xFE724C4D),
-            unfocusedBorderColor = Color(0xFE724C4D),
-            focusedLabelColor = Color(0xFF9796A1),
-            unfocusedLabelColor = Color(0xFF9796A1),
-            backgroundColor = Color.White
         )
-    )
+    }
 }
+
 
 
 
