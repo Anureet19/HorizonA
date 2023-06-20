@@ -1,5 +1,6 @@
 package com.example.horizona
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -40,6 +42,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -50,7 +55,9 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 
@@ -394,8 +401,37 @@ fun AgriGrowScreen() {
             lineHeight = 44.sp, // Adjust line height as per your preference
             color = Color.Black
         )
+
+        Button(
+            onClick = { /* Handle button click */ },
+            modifier = Modifier
+                .width(248.dp)
+                .height(60.dp)
+                .offset(x = 65.dp, y = 541.dp)
+                .background(
+                    color = Color(0xFF52B669),
+                    shape = RoundedCornerShape(60f)
+                )
+                .shadow(
+                    elevation = 10.dp,
+                    shape = RoundedCornerShape(60f)
+                ),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+        ) {
+            Text(
+                text = "Sign Up",
+                fontFamily = averageSansFontFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 18.sp,
+                lineHeight = 23.sp,
+                textAlign = TextAlign.Center,
+                letterSpacing = 0.08.em,
+                color = Color.White
+            )
+        }
     }
 }
+
 
 @Composable
 fun LeftBox() {
