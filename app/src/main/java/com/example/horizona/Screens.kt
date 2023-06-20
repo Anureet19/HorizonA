@@ -281,25 +281,12 @@ fun SplashScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(R.drawable.app_logo),
-                contentDescription = "Agri-Grow Logo",
+                painter = painterResource(R.drawable.app_logo_white),
+                contentDescription = "Horizon-A Logo",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 32.dp)
-            )
-            Text(
-                text = "Welcome to Agri-Grow",
-                style = MaterialTheme.typography.h4,
-                color = Color.White,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "We provide the best solutions for your agricultural needs.",
-                style = MaterialTheme.typography.body1,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                    .size(400.dp) // Adjust the size as desired
             )
         }
     }
