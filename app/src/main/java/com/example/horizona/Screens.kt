@@ -67,77 +67,77 @@ import androidx.compose.ui.zIndex
 import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.delay
 
-@Composable
-fun LoginScreen() {
-    val backgroundImage = painterResource(R.drawable.plantsoilapp) // Replace R.drawable.plantsoilapp with the actual resource ID of your image
-
-    BoxWithConstraints {
-        val constraints = constraints
-        val screenWidth = constraints.maxWidth
-        val screenHeight = constraints.maxHeight
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Image(
-                painter = backgroundImage,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth()
-                    .align(Alignment.Center)
-            ) {
-                Text(
-                    text = "Soil Analysis App",
-                    style = MaterialTheme.typography.h4,
-                    color = Color.White,
-                    modifier = Modifier
-                        .padding(bottom = 20.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .background(color = Color.White)
-                        .padding(20.dp)
-                        .shadow(elevation = 2.dp, shape = RoundedCornerShape(5.dp))
-                ) {
-                    // Login form
-                    Text(
-                        text = "Login",
-                        style = MaterialTheme.typography.h6,
-                        color = Color.Black,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    // Add input fields here
-                    // Example: TextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = { })
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Button(
-                        onClick = { /* Handle login button click */ },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = "Login", color = Color.White)
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = "Don't have an account? Register here",
-                        color = Color.Gray,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-            }
-        }
-    }
-}
+//@Composable
+//fun LoginScreen() {
+//    val backgroundImage = painterResource(R.drawable.plantsoilapp) // Replace R.drawable.plantsoilapp with the actual resource ID of your image
+//
+//    BoxWithConstraints {
+//        val constraints = constraints
+//        val screenWidth = constraints.maxWidth
+//        val screenHeight = constraints.maxHeight
+//
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//        ) {
+//            Image(
+//                painter = backgroundImage,
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .fillMaxSize(),
+//                contentScale = ContentScale.Crop
+//            )
+//
+//            Column(
+//                modifier = Modifier
+//                    .padding(20.dp)
+//                    .fillMaxWidth()
+//                    .align(Alignment.Center)
+//            ) {
+//                Text(
+//                    text = "Soil Analysis App",
+//                    style = MaterialTheme.typography.h4,
+//                    color = Color.White,
+//                    modifier = Modifier
+//                        .padding(bottom = 20.dp)
+//                        .align(Alignment.CenterHorizontally)
+//                )
+//
+//                Column(
+//                    modifier = Modifier
+//                        .background(color = Color.White)
+//                        .padding(20.dp)
+//                        .shadow(elevation = 2.dp, shape = RoundedCornerShape(5.dp))
+//                ) {
+//                    // Login form
+//                    Text(
+//                        text = "Login",
+//                        style = MaterialTheme.typography.h6,
+//                        color = Color.Black,
+//                        modifier = Modifier
+//                            .align(Alignment.CenterHorizontally)
+//                    )
+//                    Spacer(modifier = Modifier.height(20.dp))
+//                    // Add input fields here
+//                    // Example: TextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = { })
+//                    Spacer(modifier = Modifier.height(10.dp))
+//                    Button(
+//                        onClick = { /* Handle login button click */ },
+//                        modifier = Modifier.fillMaxWidth()
+//                    ) {
+//                        Text(text = "Login", color = Color.White)
+//                    }
+//                    Spacer(modifier = Modifier.height(10.dp))
+//                    Text(
+//                        text = "Don't have an account? Register here",
+//                        color = Color.Gray,
+//                        modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun SessionScreen(viewModel: AuthViewModel) {
@@ -372,7 +372,7 @@ fun WelcomeScreen() {
 
 
 @Composable
-fun AgriGrowScreen() {
+fun SignUpScreen() {
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
@@ -664,6 +664,154 @@ fun TextFields(modifier: Modifier = Modifier) {
 }
 
 
+@Composable
+fun LoginScreen() {
+    val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
+    val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
+
+    val screenPadding = with(LocalDensity.current) { 16.dp }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(screenPadding)
+    ) {
+        LeftBox()
+        RightBox()
+
+        Text(
+            text = "Login",
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 98.dp),
+            fontFamily = averageSansFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 36.4127.sp,
+            lineHeight = 44.sp,
+            color = Color.Black
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 200.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            OutlinedTextField(
+                value = "",
+                onValueChange = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = screenPadding, top = screenPadding),
+                textStyle = TextStyle(
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color.Black
+                ),
+                label = {
+                    Text(
+                        text = "Email",
+                        fontFamily = alatsiFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        lineHeight = 20.sp,
+                        color = Color(0xFF9796A1)
+                    )
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color.Black,
+                    focusedBorderColor = Color(0xFE724C4D),
+                    unfocusedBorderColor = Color(0xFE724C4D),
+                    focusedLabelColor = Color(0xFF9796A1),
+                    unfocusedLabelColor = Color(0xFF9796A1),
+                    backgroundColor = Color.White
+                )
+            )
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = screenPadding, top = screenPadding),
+                textStyle = TextStyle(
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color.Black
+                ),
+                label = {
+                    Text(
+                        text = "Password",
+                        fontFamily = alatsiFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        lineHeight = 20.sp,
+                        color = Color(0xFF9796A1)
+                    )
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color.Black,
+                    focusedBorderColor = Color(0xFF52B669),
+                    unfocusedBorderColor = Color(0xFF52B669),
+                    focusedLabelColor = Color(0xFF9796A1),
+                    unfocusedLabelColor = Color(0xFF9796A1),
+                    backgroundColor = Color.White
+                )
+            )
+
+            Button(
+                onClick = { /* Handle button click */ },
+                modifier = Modifier
+                    .width(248.dp)
+                    .height(60.dp)
+                    .padding(top = 24.dp),
+                shape = RoundedCornerShape(60f),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+            ) {
+                Text(
+                    text = "Sign In",
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    lineHeight = 23.sp,
+                    textAlign = TextAlign.Center,
+                    letterSpacing = 0.08.em,
+                    color = Color.White
+                )
+            }
+
+            ClickableText(
+                text = AnnotatedString("Don't have an account? Sign up"),
+                onClick = { offset ->
+                    // Handle click event
+                },
+                modifier = Modifier
+                    .padding(top = 16.dp),
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal)),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    lineHeight = 34.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color(0xFF5B5B5E)
+                )
+            )
+        }
+    }
+}
+
+// Rest of the code remains the same as provided in the previous response.
+
+
+// Rest of the code remains the same as provided in the previous response.
 
 
 //@Composable

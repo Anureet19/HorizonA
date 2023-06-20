@@ -30,7 +30,8 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    WelcomeScreen()
 //                    AppNavigator()
-                    AgriGrowScreen()
+//                    SignUpScreen()
+                    LoginScreen()
                 }
             }
         }
