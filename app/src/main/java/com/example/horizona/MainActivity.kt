@@ -28,10 +28,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    WelcomeScreen()
+//                    WelcomeScreen()
 //                    AppNavigator()
 //                    SignUpScreen()
 //                    LoginScreen()
+                    ImageBackgroundScreen()
                 }
             }
         }

@@ -303,6 +303,20 @@ fun WelcomeScreen() {
     )
 }
 
+@Composable
+fun ImageBackgroundScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(R.drawable.img),
+            contentDescription = "Background Image",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds
+        )
+        // Content of the screen goes here
+    }
+}
 
 
 //@Composable
