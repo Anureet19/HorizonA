@@ -42,27 +42,41 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.LinearGradient
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 
 import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.delay
@@ -302,21 +316,231 @@ fun WelcomeScreen() {
         }
     )
 }
+//@Composable
+//fun ImageBackgroundScreen() {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color(0xFF52B669))
+//    ) {
+//        Box(modifier = Modifier.fillMaxSize()) {
+//            Image(
+//                painter = painterResource(R.drawable.img),
+//                contentDescription = "Background Image",
+//                modifier = Modifier.fillMaxSize(),
+//                contentScale = ContentScale.Crop
+//            )
+//        }
+//
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .background(
+//                    Brush.verticalGradient(
+//                        colors = listOf(
+//                            Color(0xFF000000),
+//                            Color.Transparent
+//                        ),
+//                        startY = 0f,
+//                        endY = 1f
+//                    )
+//                )
+//        ) {
+//            Text(
+//                text = "Welcome to AgriGrow",
+//                fontFamily = FontFamily(Font(R.font.aoboshi_one)),
+//                fontWeight = FontWeight.Normal,
+//                fontSize = 36.sp,
+//                lineHeight = 46.sp,
+//                color = Color.White,
+//                modifier = Modifier
+//                    .padding(start = 47.dp, top = 110.dp)
+//            )
+//        }
+//    }
+//}
 
 @Composable
 fun ImageBackgroundScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (backgroundImage, gradient, welcomeText, horizonAText, additionalText, signinGuest, signup) = createRefs()
+
         Image(
             painter = painterResource(R.drawable.img),
             contentDescription = "Background Image",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
+            modifier = Modifier
+                .constrainAs(backgroundImage) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+//                .scale(scaleX = 1.2f, scaleY = 1.2f)
         )
-        // Content of the screen goes here
+
+        Canvas(
+            modifier = Modifier
+                .constrainAs(gradient) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+                .fillMaxSize()
+        ) {
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFFFF8800).copy(alpha = 0.6f), // Transparent orange
+                        Color(0xFFFFFFFF).copy(alpha = 0.2f),
+                        Color(0xFF34A853).copy(alpha = 0.6f) // Semi-transparent green
+                    ),
+                    startY = 0f,
+                    endY = size.height
+                )
+            )
+        }
+
+        Text(
+            text = "Welcome to",
+            fontFamily = FontFamily(Font(R.font.aoboshi_one)),
+            fontSize = 36.sp,
+            lineHeight = 46.sp,
+            color = Color.White,
+            modifier = Modifier.constrainAs(welcomeText) {
+                top.linkTo(parent.top, margin = 110.dp)
+                start.linkTo(parent.start, margin = 47.dp)
+            }
+        )
+
+        Text(
+            text = "Horizon-A",
+            fontFamily = FontFamily(Font(R.font.aoboshi_one)),
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 40.sp,
+            lineHeight = 46.sp,
+            color = Color(0xFF39FF14),
+            modifier = Modifier.constrainAs(horizonAText) {
+                top.linkTo(welcomeText.bottom)
+                start.linkTo(parent.start, margin = 47.dp)
+            }
+        )
+        Text(
+            text = "Make Farming Easy by knowing your soil",
+            fontFamily = FontFamily(Font(R.font.alatsi)),
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            lineHeight = 27.sp,
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.constrainAs(additionalText) {
+                width = Dimension.value(266.dp)
+                height = Dimension.value(54.dp)
+                start.linkTo(parent.start)
+                top.linkTo(parent.top, margin = 500.dp)
+                end.linkTo(parent.end)
+            }
+        )
+        val line = Modifier
+            .size(width = 100.dp, height = 5.dp)
+            .background(Color(255, 255, 255, 128))
+            .rotate(180f)
+
+        val lineRef = createRef()
+
+        Box(
+            modifier = Modifier
+                .constrainAs(lineRef) {
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(3.dp)
+                    start.linkTo(parent.start, margin = 160.dp)
+                    top.linkTo(additionalText.bottom, margin = 20.dp)
+                }
+                .then(line)
+        )
+
+        val button1Clicked = remember { mutableStateOf(false) }
+        val button2Clicked = remember { mutableStateOf(false) }
+
+        val button1Text = buildAnnotatedString {
+            withStyle(style = SpanStyle(fontFamily = FontFamily(Font(R.font.aoboshi_one)), fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White)) {
+                append("Signin as Guest")
+            }
+        }
+
+        val button2Text = buildAnnotatedString {
+            withStyle(style = SpanStyle(fontFamily = FontFamily(Font(R.font.aoboshi_one)), fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White)) {
+                append("Signup")
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .constrainAs(signinGuest) {
+                    width = Dimension.value(304.dp)
+                    height = Dimension.value(45.dp)
+                    start.linkTo(parent.start, margin = 35.dp)
+                    top.linkTo(lineRef.bottom, margin = 20.dp)
+                    centerHorizontallyTo(parent)
+                }
+                .background(
+                    color = Color(0x36FFFFFF), // Transparent white (0x36 = 54)
+                    shape = RoundedCornerShape(30.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(30.dp)
+                )
+        ) {
+            ClickableText(
+                text = button1Text,
+                onClick = { button1Clicked.value = !button1Clicked.value },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .constrainAs(signup) {
+                    width = Dimension.value(304.dp)
+                    height = Dimension.value(45.dp)
+                    start.linkTo(parent.start, margin = 35.dp)
+                    top.linkTo(signinGuest.bottom, margin = 10.dp)
+                    centerHorizontallyTo(parent)
+                }
+                .background(
+                    color = Color(0x36FFFFFF), // Transparent white (0x36 = 54)
+                    shape = RoundedCornerShape(30.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(30.dp)
+                )
+        ) {
+            ClickableText(
+                text = button2Text,
+                onClick = { button2Clicked.value = !button2Clicked.value },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 //@Composable
