@@ -24,11 +24,11 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,7 +55,6 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 
 //@Composable
@@ -605,6 +604,9 @@ fun SignUpScreen(viewModel: AuthViewModel) {
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
+    //states
+    val state by viewModel.signUpState
+
     val screenPadding = with(LocalDensity.current) { 16.dp }
 
     Box(
@@ -615,7 +617,7 @@ fun SignUpScreen(viewModel: AuthViewModel) {
     ) {
         LeftBox()
         RightBox()
-        TextFields(modifier = Modifier.align(Alignment.Center))
+        TextFields(modifier = Modifier.align(Alignment.Center), state, viewModel)
 
         Text(
             text = "Sign Up",
@@ -709,21 +711,21 @@ fun RightBox() {
 
 
 @Composable
-fun TextFields(modifier: Modifier = Modifier) {
+fun TextFields(modifier: Modifier = Modifier, state: SignUpState, viewModel: AuthViewModel) {
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
     val screenPadding = with(LocalDensity.current) { 16.dp }
 
-    val name = remember { mutableStateOf("") }
-    val address = remember { mutableStateOf("") }
-    val phoneNumber = remember { mutableStateOf("") }
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
+//    val name = remember { mutableStateOf("") }
+//    val address = remember { mutableStateOf("") }
+//    val phoneNumber = remember { mutableStateOf("") }
+//    val email = remember { mutableStateOf("") }
+//    val password = remember { mutableStateOf("") }
 
     Column(modifier = modifier) {
         OutlinedTextField(
-            value = name.value,
-            onValueChange = { name.value = it },
+            value = state.fullName,
+            onValueChange = { viewModel.updateSignUpState(fullName = it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = screenPadding, top = screenPadding),
@@ -756,8 +758,8 @@ fun TextFields(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = address.value,
-            onValueChange = { address.value = it },
+            value = state.address,
+            onValueChange = { viewModel.updateSignUpState(address = it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = screenPadding, top = screenPadding),
@@ -790,8 +792,8 @@ fun TextFields(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = phoneNumber.value,
-            onValueChange = { phoneNumber.value = it },
+            value = state.phoneNumber,
+            onValueChange = {  viewModel.updateSignUpState(phoneNumber = it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = screenPadding, top = screenPadding),
@@ -824,8 +826,8 @@ fun TextFields(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = email.value,
-            onValueChange = { email.value = it },
+            value = state.email,
+            onValueChange = { viewModel.updateSignUpState(email = it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = screenPadding, top = screenPadding),
@@ -858,8 +860,10 @@ fun TextFields(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = password.value,
-            onValueChange = { password.value = it },
+            value = state.password,
+            onValueChange = { viewModel.updateSignUpState(password = it) },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = screenPadding, top = screenPadding),
@@ -966,6 +970,8 @@ fun LoginScreen(viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = "",
                 onValueChange = { },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = screenPadding, top = screenPadding),

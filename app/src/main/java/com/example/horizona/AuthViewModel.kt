@@ -16,7 +16,7 @@ class AuthViewModel : ViewModel() {
     var verificationCodeState = mutableStateOf(VerificationCodeState())
         private set
 
-    fun updateSignUpState(fullName: String? = null, address: String?, phoneNumber: Number?, email: String? = null, password: String? = null) {
+    fun updateSignUpState(fullName: String? = null, address: String? = null, phoneNumber: String? = null, email: String? = null, password: String? = null) {
         fullName?.let { signUpState.value = signUpState.value.copy(fullName = it) }
         address?.let { signUpState.value = signUpState.value.copy(address = it) }
         phoneNumber?.let { signUpState.value = signUpState.value.copy(phoneNumber = it) }
