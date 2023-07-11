@@ -5,7 +5,7 @@ import android.location.Address
 data class SignUpState(
     var fullName: String="",
     var address: String="",
-    var phoneNumber: Number,
+    var phoneNumber: Number=9999999999,
     var email: String ="",
     var password: String =""
 )
