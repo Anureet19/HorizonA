@@ -1,10 +1,16 @@
 package com.example.horizona
 
+import android.content.Context
 import android.location.Address
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
+    private val amplifyService: AmplifyService = AmplifyServiceImpl()
+
     lateinit var navigateTo: (String) -> Unit
 
     var loginState = mutableStateOf(LoginState())
@@ -34,6 +40,10 @@ class AuthViewModel : ViewModel() {
         verificationCodeState.value = verificationCodeState.value.copy(code = code)
     }
 
+    fun configureAmplify(context: Context){
+        amplifyService.configureAmplify(context)
+    }
+
     fun showSignUp() {
         navigateTo("signUp")
     }
@@ -43,18 +53,34 @@ class AuthViewModel : ViewModel() {
     }
 
     fun signUp() {
-        navigateTo("verify")
+        amplifyService.signUp(signUpState.value) {
+            viewModelScope.launch(Dispatchers.Main) {
+                navigateTo("verify")
+            }
+        }
     }
 
     fun verifyCode() {
-        navigateTo("login")
+        amplifyService.verifyCode(verificationCodeState.value) {
+            viewModelScope.launch(Dispatchers.Main) {
+                navigateTo("login")
+            }
+        }
     }
 
     fun login() {
-        navigateTo("session")
+        amplifyService.login(loginState.value) {
+            viewModelScope.launch(Dispatchers.Main) {
+                navigateTo("session")
+            }
+        }
     }
 
     fun logOut() {
-        navigateTo("login")
+        amplifyService.logOut {
+            viewModelScope.launch(Dispatchers.Main) {
+                navigateTo("login")
+            }
+        }
     }
 }

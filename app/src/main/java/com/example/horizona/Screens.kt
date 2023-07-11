@@ -227,6 +227,7 @@ fun SessionScreen(viewModel: AuthViewModel) {
 
 @Composable
 fun VerificationCodeScreen(viewModel: AuthViewModel) {
+    val state by viewModel.verificationCodeState
 
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
@@ -234,8 +235,8 @@ fun VerificationCodeScreen(viewModel: AuthViewModel) {
         modifier = Modifier.fillMaxSize()
     ) {
         TextField(
-            value = "",
-            onValueChange = { },
+            value = state.code,
+            onValueChange = { viewModel.updateVerificationCodeState(code = it) },
             placeholder = { Text(text = "Verification Code") }
         )
 
@@ -903,6 +904,9 @@ fun LoginScreen(viewModel: AuthViewModel) {
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
+    //state management
+    val state by viewModel.loginState
+
     val screenPadding = with(LocalDensity.current) { 16.dp }
 
     Box(
@@ -934,8 +938,8 @@ fun LoginScreen(viewModel: AuthViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OutlinedTextField(
-                value = "",
-                onValueChange = { },
+                value = state.email,
+                onValueChange = { viewModel.updateLoginState(email = it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = screenPadding, top = screenPadding),
@@ -968,8 +972,8 @@ fun LoginScreen(viewModel: AuthViewModel) {
             )
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { },
+                value = state.password,
+                onValueChange = { viewModel.updateLoginState(password = it) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier

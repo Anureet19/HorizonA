@@ -21,6 +21,8 @@ class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<AuthViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.configureAmplify(this)
         setContent {
             HorizonATheme {
                 // A surface container using the 'background' color from the theme
