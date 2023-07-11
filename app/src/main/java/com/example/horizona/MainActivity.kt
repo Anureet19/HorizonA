@@ -29,10 +29,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    WelcomeScreen()
-//                    AppNavigator()
+                    AppNavigator()
 //                    SignUpScreen()
 //                    LoginScreen()
-                    ImageBackgroundScreen()
+//                    ImageBackgroundScreen()
                 }
             }
         }

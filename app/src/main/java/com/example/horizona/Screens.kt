@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 
 //@Composable
@@ -143,87 +144,87 @@ fun SessionScreen(viewModel: AuthViewModel) {
     }
 }
 
-@Composable
-fun SignUpScreen(viewModel: AuthViewModel) {
+//@Composable
+//fun SignUpScreen(viewModel: AuthViewModel) {
+//
+//    Column(
+//        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        TextField(
+//            value = "",
+//            onValueChange = { },
+//            placeholder = { Text(text = "Name") }
+//        )
+//
+//        TextField(
+//            value = "",
+//            onValueChange = { },
+//            placeholder = { Text(text = "Address") }
+//        )
+//
+//        TextField(
+//            value = "",
+//            onValueChange = { },
+//            placeholder = { Text(text = "Phone Number") }
+//        )
+//
+//        TextField(
+//            value = "",
+//            onValueChange = { },
+//            placeholder = { Text(text = "Email") }
+//        )
+//
+//        TextField(
+//            value = "",
+//            onValueChange = { },
+//            visualTransformation = PasswordVisualTransformation(),
+//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+//            placeholder = { Text(text = "Password") }
+//        )
+//
+//        Button(onClick = viewModel::signUp) {
+//            Text(text = "Sign Up")
+//        }
+//
+//        TextButton(onClick = viewModel::showLogin) {
+//            Text(text = "Already have an account? Login.")
+//        }
+//    }
+//}
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        TextField(
-            value = "",
-            onValueChange = { },
-            placeholder = { Text(text = "Name") }
-        )
-
-        TextField(
-            value = "",
-            onValueChange = { },
-            placeholder = { Text(text = "Address") }
-        )
-
-        TextField(
-            value = "",
-            onValueChange = { },
-            placeholder = { Text(text = "Phone Number") }
-        )
-
-        TextField(
-            value = "",
-            onValueChange = { },
-            placeholder = { Text(text = "Email") }
-        )
-
-        TextField(
-            value = "",
-            onValueChange = { },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            placeholder = { Text(text = "Password") }
-        )
-
-        Button(onClick = viewModel::signUp) {
-            Text(text = "Sign Up")
-        }
-
-        TextButton(onClick = viewModel::showLogin) {
-            Text(text = "Already have an account? Login.")
-        }
-    }
-}
-
-@Composable
-fun LoginScreen(viewModel: AuthViewModel) {
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        TextField(
-            value = "",
-            onValueChange = { },
-            placeholder = { Text(text = "Username") }
-        )
-
-        TextField(
-            value = "",
-            onValueChange = { },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            placeholder = { Text(text = "Password") }
-        )
-
-        Button(onClick = viewModel::login) {
-            Text(text = "Login")
-        }
-
-        TextButton(onClick = viewModel::showSignUp) {
-            Text(text = "Don't have an account? Sign up.")
-        }
-    }
-}
+//@Composable
+//fun LoginScreen(viewModel: AuthViewModel) {
+//
+//    Column(
+//        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        TextField(
+//            value = "",
+//            onValueChange = { },
+//            placeholder = { Text(text = "Username") }
+//        )
+//
+//        TextField(
+//            value = "",
+//            onValueChange = { },
+//            visualTransformation = PasswordVisualTransformation(),
+//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+//            placeholder = { Text(text = "Password") }
+//        )
+//
+//        Button(onClick = viewModel::login) {
+//            Text(text = "Login")
+//        }
+//
+//        TextButton(onClick = viewModel::showSignUp) {
+//            Text(text = "Don't have an account? Sign up.")
+//        }
+//    }
+//}
 
 @Composable
 fun VerificationCodeScreen(viewModel: AuthViewModel) {
@@ -337,7 +338,7 @@ fun WelcomeScreen() {
 //}
 
 @Composable
-fun ImageBackgroundScreen() {
+fun ImageBackgroundScreen(viewModel: AuthViewModel) {
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (backgroundImage, gradient, welcomeText, horizonAText, additionalText, signinGuest, signup, loginText) = createRefs()
 
@@ -473,7 +474,8 @@ fun ImageBackgroundScreen() {
         ) {
             ClickableText(
                 text = button1Text,
-                onClick = { button1Clicked.value = !button1Clicked.value },
+                onClick = { viewModel.login() },
+//                    button1Clicked.value = !button1Clicked.value },
                 modifier = Modifier.align(Alignment.Center)
             )
         }
@@ -499,13 +501,14 @@ fun ImageBackgroundScreen() {
         ) {
             ClickableText(
                 text = button2Text,
-                onClick = { button2Clicked.value = !button2Clicked.value },
+                onClick = { viewModel.showSignUp() },
+//                    button2Clicked.value = !button2Clicked.value },
                 modifier = Modifier.align(Alignment.Center)
             )
         }
         ClickableText(
             text = AnnotatedString("Already have an account? Login"),
-            onClick = { offset ->
+            onClick = { viewModel.showLogin()
                 // Handle click event
             },
             modifier = Modifier
@@ -598,7 +601,7 @@ fun ImageBackgroundScreen() {
 
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(viewModel: AuthViewModel) {
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
@@ -632,11 +635,11 @@ fun SignUpScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = { /* Handle button click */ },
+                onClick = viewModel::signUp,
                 modifier = Modifier
                     .width(248.dp)
                     .height(60.dp)
-                    .offset(y=-(100).dp)
+                    .offset(y = -(100).dp)
                     .padding(top = 24.dp),
                 shape = RoundedCornerShape(60f),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
@@ -656,6 +659,7 @@ fun SignUpScreen() {
             ClickableText(
                 text = AnnotatedString("Already have an account? Login"),
                 onClick = { offset ->
+                    viewModel.showLogin()
                     // Handle click event
                 },
                 modifier = Modifier
@@ -891,7 +895,7 @@ fun TextFields(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: AuthViewModel) {
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
@@ -994,7 +998,7 @@ fun LoginScreen() {
             )
 
             Button(
-                onClick = { /* Handle button click */ },
+                onClick = viewModel::login,
                 modifier = Modifier
                     .width(248.dp)
                     .height(60.dp)
@@ -1016,7 +1020,7 @@ fun LoginScreen() {
 
             ClickableText(
                 text = AnnotatedString("Don't have an account? Sign up"),
-                onClick = { offset ->
+                onClick = { offset -> viewModel.showSignUp()
                     // Handle click event
                 },
                 modifier = Modifier
