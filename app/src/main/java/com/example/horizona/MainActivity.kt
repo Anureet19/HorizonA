@@ -45,7 +45,10 @@ class MainActivity : ComponentActivity() {
             navController.navigate(it)
         }
 
-        NavHost(navController = navController, startDestination = "login") {
+        NavHost(navController = navController, startDestination = "welcomeScreen") {
+            composable("welcomeScreen") {
+                ImageBackgroundScreen(viewModel = viewModel)
+            }
             composable("login") {
                 LoginScreen(viewModel = viewModel)
             }
