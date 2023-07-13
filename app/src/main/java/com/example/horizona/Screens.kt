@@ -227,24 +227,84 @@ fun SessionScreen(viewModel: AuthViewModel) {
 
 @Composable
 fun VerificationCodeScreen(viewModel: AuthViewModel) {
+    val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
+    val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
+
     val state by viewModel.verificationCodeState
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        TextField(
-            value = state.code,
-            onValueChange = { viewModel.updateVerificationCodeState(code = it) },
-            placeholder = { Text(text = "Verification Code") }
-        )
+    val screenPadding = with(LocalDensity.current) { 16.dp }
 
-        Button(onClick = viewModel::verifyCode) {
-            Text(text = "Verify")
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(screenPadding)
+    ) {
+        LeftBox()
+        RightBox()
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            TextField(
+                value = state.code,
+                onValueChange = { viewModel.updateVerificationCodeState(code = it) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = screenPadding),
+                textStyle = TextStyle(
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color.Black
+                ),
+                label = {
+                    Text(
+                        text = "Verification Code",
+                        fontFamily = alatsiFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        lineHeight = 20.sp,
+                        color = Color(0xFF9796A1)
+                    )
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color.Black,
+                    focusedBorderColor = Color(0xFE724C4D),
+                    unfocusedBorderColor = Color(0xFE724C4D),
+                    focusedLabelColor = Color(0xFF9796A1),
+                    unfocusedLabelColor = Color(0xFF9796A1),
+                    backgroundColor = Color.White
+                )
+            )
+
+            Button(
+                onClick = viewModel::verifyCode,
+                modifier = Modifier
+                    .width(248.dp)
+                    .height(60.dp)
+                    .padding(top = 24.dp),
+                shape = RoundedCornerShape(60f),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+            ) {
+                Text(
+                    text = "Verify",
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    lineHeight = 23.sp,
+                    textAlign = TextAlign.Center,
+                    letterSpacing = 0.08.em,
+                    color = Color.White
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun SplashScreen(
@@ -643,7 +703,7 @@ fun SignUpScreen(viewModel: AuthViewModel) {
                 modifier = Modifier
                     .width(248.dp)
                     .height(60.dp)
-                    .offset(y = -(100).dp)
+                    .offset(y = -(50).dp)
                     .padding(top = 24.dp),
                 shape = RoundedCornerShape(60f),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
