@@ -58,78 +58,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import kotlinx.coroutines.delay
 
-//@Composable
-//fun LoginScreen() {
-//    val backgroundImage = painterResource(R.drawable.plantsoilapp) // Replace R.drawable.plantsoilapp with the actual resource ID of your image
-//
-//    BoxWithConstraints {
-//        val constraints = constraints
-//        val screenWidth = constraints.maxWidth
-//        val screenHeight = constraints.maxHeight
-//
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//        ) {
-//            Image(
-//                painter = backgroundImage,
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .fillMaxSize(),
-//                contentScale = ContentScale.Crop
-//            )
-//
-//            Column(
-//                modifier = Modifier
-//                    .padding(20.dp)
-//                    .fillMaxWidth()
-//                    .align(Alignment.Center)
-//            ) {
-//                Text(
-//                    text = "Soil Analysis App",
-//                    style = MaterialTheme.typography.h4,
-//                    color = Color.White,
-//                    modifier = Modifier
-//                        .padding(bottom = 20.dp)
-//                        .align(Alignment.CenterHorizontally)
-//                )
-//
-//                Column(
-//                    modifier = Modifier
-//                        .background(color = Color.White)
-//                        .padding(20.dp)
-//                        .shadow(elevation = 2.dp, shape = RoundedCornerShape(5.dp))
-//                ) {
-//                    // Login form
-//                    Text(
-//                        text = "Login",
-//                        style = MaterialTheme.typography.h6,
-//                        color = Color.Black,
-//                        modifier = Modifier
-//                            .align(Alignment.CenterHorizontally)
-//                    )
-//                    Spacer(modifier = Modifier.height(20.dp))
-//                    // Add input fields here
-//                    // Example: TextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = { })
-//                    Spacer(modifier = Modifier.height(10.dp))
-//                    Button(
-//                        onClick = { /* Handle login button click */ },
-//                        modifier = Modifier.fillMaxWidth()
-//                    ) {
-//                        Text(text = "Login", color = Color.White)
-//                    }
-//                    Spacer(modifier = Modifier.height(10.dp))
-//                    Text(
-//                        text = "Don't have an account? Register here",
-//                        color = Color.Gray,
-//                        modifier = Modifier.align(Alignment.CenterHorizontally)
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
 @Composable
 fun SessionScreen(viewModel: AuthViewModel) {
     Column(
@@ -143,88 +71,6 @@ fun SessionScreen(viewModel: AuthViewModel) {
         }
     }
 }
-
-//@Composable
-//fun SignUpScreen(viewModel: AuthViewModel) {
-//
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        TextField(
-//            value = "",
-//            onValueChange = { },
-//            placeholder = { Text(text = "Name") }
-//        )
-//
-//        TextField(
-//            value = "",
-//            onValueChange = { },
-//            placeholder = { Text(text = "Address") }
-//        )
-//
-//        TextField(
-//            value = "",
-//            onValueChange = { },
-//            placeholder = { Text(text = "Phone Number") }
-//        )
-//
-//        TextField(
-//            value = "",
-//            onValueChange = { },
-//            placeholder = { Text(text = "Email") }
-//        )
-//
-//        TextField(
-//            value = "",
-//            onValueChange = { },
-//            visualTransformation = PasswordVisualTransformation(),
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-//            placeholder = { Text(text = "Password") }
-//        )
-//
-//        Button(onClick = viewModel::signUp) {
-//            Text(text = "Sign Up")
-//        }
-//
-//        TextButton(onClick = viewModel::showLogin) {
-//            Text(text = "Already have an account? Login.")
-//        }
-//    }
-//}
-
-//@Composable
-//fun LoginScreen(viewModel: AuthViewModel) {
-//
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        TextField(
-//            value = "",
-//            onValueChange = { },
-//            placeholder = { Text(text = "Username") }
-//        )
-//
-//        TextField(
-//            value = "",
-//            onValueChange = { },
-//            visualTransformation = PasswordVisualTransformation(),
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-//            placeholder = { Text(text = "Password") }
-//        )
-//
-//        Button(onClick = viewModel::login) {
-//            Text(text = "Login")
-//        }
-//
-//        TextButton(onClick = viewModel::showSignUp) {
-//            Text(text = "Don't have an account? Sign up.")
-//        }
-//    }
-//}
 
 @Composable
 fun VerificationCodeScreen(viewModel: AuthViewModel) {
@@ -344,60 +190,16 @@ fun SplashScreen(
     }
 }
 
-//@Composable
-//fun WelcomeScreen() {
-//    val navigateToNextScreen = { /* Navigate to the next screen */ }
-//
-//    Scaffold(
-//        content = {
-//            SplashScreen(navigateToNextScreen)
-//        }
-//    )
-//}
+@Composable
+fun WelcomeScreen() {
+    val navigateToNextScreen = { /* Navigate to the next screen */ }
 
-//@Composable
-//fun ImageBackgroundScreen() {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color(0xFF52B669))
-//    ) {
-//        Box(modifier = Modifier.fillMaxSize()) {
-//            Image(
-//                painter = painterResource(R.drawable.img),
-//                contentDescription = "Background Image",
-//                modifier = Modifier.fillMaxSize(),
-//                contentScale = ContentScale.Crop
-//            )
-//        }
-//
-//        Box(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(
-//                    Brush.verticalGradient(
-//                        colors = listOf(
-//                            Color(0xFF000000),
-//                            Color.Transparent
-//                        ),
-//                        startY = 0f,
-//                        endY = 1f
-//                    )
-//                )
-//        ) {
-//            Text(
-//                text = "Welcome to AgriGrow",
-//                fontFamily = FontFamily(Font(R.font.aoboshi_one)),
-//                fontWeight = FontWeight.Normal,
-//                fontSize = 36.sp,
-//                lineHeight = 46.sp,
-//                color = Color.White,
-//                modifier = Modifier
-//                    .padding(start = 47.dp, top = 110.dp)
-//            )
-//        }
-//    }
-//}
+    Scaffold(
+        content = {
+            SplashScreen(navigateToNextScreen)
+        }
+    )
+}
 
 @Composable
 fun ImageBackgroundScreen(viewModel: AuthViewModel) {
@@ -597,70 +399,6 @@ fun ImageBackgroundScreen(viewModel: AuthViewModel) {
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//@Composable
-//fun WelcomeScreen() {
-//    Surface(
-//        color = Color(0xFFF2F2F2),
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(16.dp),
-//            verticalArrangement = Arrangement.Center
-//        ) {
-//            Image(
-//                painter = painterResource(R.drawable.app_logo),
-//                contentDescription = "App Logo",
-//                modifier = Modifier
-//                    .align(Alignment.CenterHorizontally)
-//                    .padding(bottom = 32.dp)
-//            )
-//            Button(
-//                onClick = { /* Handle Registration */ },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(56.dp)
-//                    .clip(RoundedCornerShape(28.dp))
-//                    .background(Color(0xFF34BFA3))
-//            ) {
-//                Text(
-//                    text = "REGISTER",
-//                    color = Color.White,
-//                    style = MaterialTheme.typography.button
-//                )
-//            }
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Button(
-//                onClick = { /* Handle Login */ },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(56.dp)
-//                    .clip(RoundedCornerShape(28.dp))
-//                    .border(1.dp, Color(0xFF34BFA3), RoundedCornerShape(28.dp))
-//            ) {
-//                Text(
-//                    text = "LOGIN",
-//                    color = Color(0xFF34BFA3),
-//                    style = MaterialTheme.typography.button
-//                )
-//            }
-//        }
-//    }
-//}
-
 
 @Composable
 fun SignUpScreen(viewModel: AuthViewModel) {
