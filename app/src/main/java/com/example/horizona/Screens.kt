@@ -27,6 +27,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -778,11 +779,19 @@ fun TextFields(modifier: Modifier = Modifier, state: SignUpState, viewModel: Aut
 
     val screenPadding = with(LocalDensity.current) { 16.dp }
 
-//    val name = remember { mutableStateOf("") }
-//    val address = remember { mutableStateOf("") }
-//    val phoneNumber = remember { mutableStateOf("") }
-//    val email = remember { mutableStateOf("") }
-//    val password = remember { mutableStateOf("") }
+    // Clear the values in the state object when recomposed
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.updateSignUpState(
+                fullName = "",
+                address = "",
+                phoneNumber = "",
+                username = "",
+                email = "",
+                password = ""
+            )
+        }
+    }
 
     Column(modifier = modifier) {
         OutlinedTextField(
