@@ -6,6 +6,7 @@ data class SignUpState(
     var fullName: String="",
     var address: String="",
     var phoneNumber: String="",
+    var username: String="",
     var email: String ="",
     var password: String =""
 )
@@ -16,6 +17,6 @@ data class LoginState(
 )
 
 data class VerificationCodeState(
-    var email: String ="",
+    var username: String ="",
     var code: String =""
 )

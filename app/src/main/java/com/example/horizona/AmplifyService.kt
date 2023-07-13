@@ -35,7 +35,7 @@ class AmplifyServiceImpl : AmplifyService {
             .userAttribute(AuthUserAttributeKey.email(), state.email)
             .build()
 
-        Amplify.Auth.signUp(state.fullName, state.password, options,
+        Amplify.Auth.signUp(state.username, state.password, options,
             { onComplete() },
             { Log.e("KILO", "Sign Up Error:", it) }
         )
@@ -43,7 +43,7 @@ class AmplifyServiceImpl : AmplifyService {
 
     override fun verifyCode(state: VerificationCodeState, onComplete: () -> Unit) {
         Amplify.Auth.confirmSignUp(
-            state.email,
+            state.username,
             state.code,
             { onComplete() },
             { Log.e("KILO", "Verification Failed: ", it) }

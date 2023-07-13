@@ -22,12 +22,13 @@ class AuthViewModel : ViewModel() {
     var verificationCodeState = mutableStateOf(VerificationCodeState())
         private set
 
-    fun updateSignUpState(fullName: String? = null, address: String? = null, phoneNumber: String? = null, email: String? = null, password: String? = null) {
+    fun updateSignUpState(fullName: String? = null, address: String? = null, phoneNumber: String? = null, username: String? = null, email: String? = null, password: String? = null) {
         fullName?.let { signUpState.value = signUpState.value.copy(fullName = it) }
         address?.let { signUpState.value = signUpState.value.copy(address = it) }
         phoneNumber?.let { signUpState.value = signUpState.value.copy(phoneNumber = it) }
-        email?.let { signUpState.value = signUpState.value.copy(email = it)
-            verificationCodeState.value = verificationCodeState.value.copy(email = it) }
+        username?.let { signUpState.value = signUpState.value.copy(username = it)
+            verificationCodeState.value = verificationCodeState.value.copy(username = it) }
+        email?.let { signUpState.value = signUpState.value.copy(email = it) }
         password?.let { signUpState.value = signUpState.value.copy(password = it) }
     }
 

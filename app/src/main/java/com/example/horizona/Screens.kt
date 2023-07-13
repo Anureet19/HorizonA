@@ -283,16 +283,17 @@ fun SplashScreen(
     }
 }
 
-@Composable
-fun WelcomeScreen() {
-    val navigateToNextScreen = { /* Navigate to the next screen */ }
+//@Composable
+//fun WelcomeScreen() {
+//    val navigateToNextScreen = { /* Navigate to the next screen */ }
+//
+//    Scaffold(
+//        content = {
+//            SplashScreen(navigateToNextScreen)
+//        }
+//    )
+//}
 
-    Scaffold(
-        content = {
-            SplashScreen(navigateToNextScreen)
-        }
-    )
-}
 //@Composable
 //fun ImageBackgroundScreen() {
 //    Box(
@@ -820,6 +821,40 @@ fun TextFields(modifier: Modifier = Modifier, state: SignUpState, viewModel: Aut
                 textColor = Color.Black,
                 focusedBorderColor = Color(0xFF34A853),
                 unfocusedBorderColor = Color(0xFF34A853),
+                focusedLabelColor = Color(0xFF9796A1),
+                unfocusedLabelColor = Color(0xFF9796A1),
+                backgroundColor = Color.White
+            )
+        )
+
+        OutlinedTextField(
+            value = state.username,
+            onValueChange = { viewModel.updateSignUpState(username = it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = screenPadding, top = screenPadding),
+            textStyle = TextStyle(
+                fontFamily = alatsiFontFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                lineHeight = 20.sp,
+                color = Color.Black
+            ),
+            label = {
+                Text(
+                    text = "Username",
+                    fontFamily = alatsiFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    color = Color(0xFF9796A1)
+                )
+            },
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.Black,
+                focusedBorderColor = Color(0xFF2372CF),
+                unfocusedBorderColor = Color(0xFF2372CF),
                 focusedLabelColor = Color(0xFF9796A1),
                 unfocusedLabelColor = Color(0xFF9796A1),
                 backgroundColor = Color.White
