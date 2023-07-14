@@ -65,5 +65,13 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.6.0"
     implementation "androidx.compose.material3:material3:1.2.0-alpha02"
     implementation 'androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10'
+
+    // Amplify
+    def amplify_version = "1.31.3"
+    implementation "com.amplifyframework:aws-storage-s3:$amplify_version"
     implementation 'com.amplifyframework:aws-auth-cognito:1.36.2'
+
+    // Coil
+    def coil_version = "1.4.0"
+    implementation "io.coil-kt:coil-compose:$coil_version"
 }

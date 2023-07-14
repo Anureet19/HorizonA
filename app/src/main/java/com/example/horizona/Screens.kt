@@ -1,5 +1,8 @@
 package com.example.horizona
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,6 +32,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,18 +60,111 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.rememberImagePainter
+import com.amplifyframework.core.Amplify
 import kotlinx.coroutines.delay
 
 @Composable
-fun SessionScreen(viewModel: AuthViewModel) {
+fun SessionScreen(
+    viewModel: AuthViewModel,
+    imageState: MutableState<ImageState>,
+    getImageLauncher: ActivityResultLauncher<String>,
+    uploadPhoto: (Uri) -> Unit,
+    downloadPhoto: () -> Unit
+) {
+    val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
+
+    LeftBox()
+    RightBox()
     Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(text = "YOU HAVE LOGGED IN")
-        Button(onClick = viewModel::logOut) {
-            Text("Log Out")
+        when (val state = imageState.value) {
+            // Show Open Gallery Button
+            is ImageState.Initial -> {
+//                Button(onClick = { getImageLauncher.launch("image/*") }) {
+//                    Text(text = "Open Gallery")
+//                }
+                Button(
+                    onClick = { getImageLauncher.launch("image/*") },
+                    modifier = Modifier
+                        .width(248.dp)
+                        .height(60.dp)
+                        .padding(top = 24.dp),
+                    shape = RoundedCornerShape(60f),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+                ) {
+                    Text(
+                        text = "Open Gallery",
+                        fontFamily = averageSansFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        lineHeight = 23.sp,
+                        textAlign = TextAlign.Center,
+                        letterSpacing = 0.08.em,
+                        color = Color.White
+                    )
+                }
+            }
+
+            // Show Selected Photo and Upload Button
+            is ImageState.ImageSelected -> {
+                Image(
+                    painter = rememberImagePainter(state.imageUri),
+                    contentDescription = null,
+                    modifier = Modifier.size(200.dp)
+                )
+//                Button(onClick = { uploadPhoto(state.imageUri) }) {
+//                    Text(text = "Upload Photo")
+//                }
+                Button(
+                    onClick = { uploadPhoto(state.imageUri) },
+                    modifier = Modifier
+                        .width(248.dp)
+                        .height(60.dp)
+                        .padding(top = 24.dp),
+                    shape = RoundedCornerShape(60f),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+                ) {
+                    Text(
+                        text = "Upload Photo",
+                        fontFamily = averageSansFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        lineHeight = 23.sp,
+                        textAlign = TextAlign.Center,
+                        letterSpacing = 0.08.em,
+                        color = Color.White
+                    )
+                }
+            }
+
+            // Show Image Upload Success Message
+            is ImageState.ImageUploaded -> {
+                Text(
+                    text = "Image Upload successful!",
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    lineHeight = 23.sp,
+                    textAlign = TextAlign.Center,
+                    letterSpacing = 0.08.em,
+                    color = Color.Black
+                )
+            }
+
+            // Show downloaded image
+//            is ImageState.ImageDownloaded -> {
+//                Image(
+//                    painter = rememberImagePainter(state.downloadedImageFile),
+//                    contentDescription = null,
+//                    modifier = Modifier.fillMaxSize()
+//                )
+//            }
+
+            else -> {}
         }
     }
 }

@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3dfcb8dbb",
+  "policyUUID": "dfcb8dbb",
+  "bucketName": "horizona2a4c7b61b86d049f6b3bdce6cb43d7b57",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
