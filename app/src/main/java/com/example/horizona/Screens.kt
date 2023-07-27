@@ -74,19 +74,21 @@ fun SessionScreen(
 ) {
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
 
+    LaunchedEffect(Unit) {
+        imageState.value = ImageState.Initial
+    }
+
     LeftBox()
     RightBox()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
+            .background(Color.White)
     ) {
         when (val state = imageState.value) {
             // Show Open Gallery Button
             is ImageState.Initial -> {
-//                Button(onClick = { getImageLauncher.launch("image/*") }) {
-//                    Text(text = "Open Gallery")
-//                }
                 Button(
                     onClick = { getImageLauncher.launch("image/*") },
                     modifier = Modifier
@@ -116,9 +118,6 @@ fun SessionScreen(
                     contentDescription = null,
                     modifier = Modifier.size(200.dp)
                 )
-//                Button(onClick = { uploadPhoto(state.imageUri) }) {
-//                    Text(text = "Upload Photo")
-//                }
                 Button(
                     onClick = { uploadPhoto(state.imageUri) },
                     modifier = Modifier
