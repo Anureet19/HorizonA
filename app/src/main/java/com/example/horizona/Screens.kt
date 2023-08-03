@@ -78,7 +78,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.amplifyframework.core.Amplify
 import com.google.gson.Gson
+import io.ktor.client.HttpClient
+import io.ktor.client.features.get
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.request.get
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SessionScreen(
@@ -1249,11 +1256,26 @@ fun LoginScreen(viewModel: AuthViewModel) {
 @Composable
 fun DashboardScreen() {
     // State to hold the soil data fetched from the API
-    val soilDataState = remember { mutableStateOf<SoilData?>(null) }
+    var soilDataState = remember { mutableStateOf<SoilData?>(null) }
 
     // Fetch the data from the API. You need to replace this with the actual API call.
-    fetchSoilData { soilData ->
-        soilDataState.value = soilData
+//    fetchSoilData { soilData ->
+//        soilDataState.value = soilData
+//    }
+    // Coroutine to fetch the data from the API
+    var errorMessage = remember { mutableStateOf<String?>(null) }
+
+    // Fetch the data from the API using coroutine
+    LaunchedEffect(true) {
+        fetchSoilData(
+            onSuccess = { soilData ->
+                soilDataState.value = soilData
+            },
+            onError = { error ->
+                errorMessage.value = error
+                Log.d("dhruv error message", errorMessage.toString())
+            }
+        )
     }
 
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
@@ -1267,10 +1289,26 @@ fun DashboardScreen() {
             .background(Color.White)
             .padding(screenPadding)
     ) {
-        soilDataState.value?.let { soilData ->
-            LeftBox()
-            RightBox()
-            ScrollableContent(soilData = soilData, averageSansFontFamily = averageSansFontFamily)
+        if (errorMessage.value != null) {
+            Log.d("dhruv", "nono")
+            Log.d("dhruv error message", errorMessage.toString())
+            // Show error message if there's an error
+            Text(
+                text = errorMessage.value ?: "", // Use the value property to access the String value from MutableState
+                modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center),
+                color = Color.Red,
+                textAlign = TextAlign.Center
+            )
+        } else {
+            Log.d("dhruv", "welcome")
+            soilDataState.value?.let { soilData ->
+                LeftBox()
+                RightBox()
+                ScrollableContent(
+                    soilData = soilData,
+                    averageSansFontFamily = averageSansFontFamily
+                )
+            }
         }
     }
 }
@@ -1448,34 +1486,84 @@ fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Flo
     }
 }
 
+//suspend fun fetchSoilData(onSuccess: (SoilData) -> Unit) {
+//    Log.e("dhruv", "In the function")
+//    val client = HttpClient {
+//        install(JsonFeature) {
+//            serializer = KotlinxSerializer()
+//        }
+//    }
+//
+//    try {
+//        // Make the API call using ktor-client within a coroutine
+//        val soilData: SoilData = withContext(Dispatchers.IO) {
+//            client.get("http://192.168.0.147:5000/predict")
+//        }
+//        Log.e("dhruv", "Successfully made API call")
+//
+//        // Call the callback function to update the state with the fetched data
+//        onSuccess(soilData)
+//    } catch (e: Exception) {
+//        // Handle any exceptions or errors that may occur during the API call
+//        e.printStackTrace()
+//    } finally {
+//        client.close()
+//    }
+//}
+
+suspend fun fetchSoilData(onSuccess: (SoilData) -> Unit, onError: (String) -> Unit) {
+    val client = HttpClient {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer()
+        }
+    }
+
+    try {
+        // Make the API call using ktor-client
+        val soilData: SoilData = client.get("http://192.168.0.147:5000/predict")
+
+        // Call the callback function to update the state with the fetched data
+        onSuccess(soilData)
+    } catch (e: Exception) {
+        // Handle any exceptions or errors that may occur during the API call
+        Log.e("Api fuck hogyi", e.toString())
+        onError("Failed to fetch soil data. Please try again later.")
+        e.printStackTrace()
+    } finally {
+        client.close()
+    }
+}
+
+
+
 
 // Replace this function with the actual API call to "/predict"
-fun fetchSoilData(onSuccess: (SoilData) -> Unit) {
-    // Simulating the data received from the API
-    val jsonString = """
-        {
-            "Category": "soil",
-            "Type": "Clay",
-            "Composition": {
-                "Gravel": 10.0,
-                "Sand": 80.0,
-                "Silt": 10.0
-            },
-            "Color": "Dark Brown",
-            "pHRange": "5.5 - 7.0",
-            "AssociatedNutrients": "Organic matter, Carbon, Nitrogen, Phosphorus, Potassium",
-            "FertilizerRecommendation": "Use balanced NPK fertilizers to provide essential nutrients to plants. Consider using slow-release fertilizers to reduce nutrient leaching in sandy soils.",
-            "CropPlantRecommendation": "Beans, Peas, Sweet Potatoes, Carrots, Drought-resistant plants like Succulents and Cacti, Deep-rooted plants that can access water deeper in the soil.",
-            "GeneralRecommendation": "Improve soil structure with organic matter to enhance water retention. Mulch the soil to reduce evaporation and maintain moisture."
-        }
-    """.trimIndent()
-
-    // Deserialize the JSON data into a SoilData object
-    val soilData = Gson().fromJson(jsonString, SoilData::class.java)
-
-    // Call the callback function to update the state with the fetched data
-    onSuccess(soilData)
-}
+//fun fetchSoilData(onSuccess: (SoilData) -> Unit) {
+//    // Simulating the data received from the API
+//    val jsonString = """
+//        {
+//            "Category": "soil",
+//            "Type": "Clay",
+//            "Composition": {
+//                "Gravel": 10.0,
+//                "Sand": 80.0,
+//                "Silt": 10.0
+//            },
+//            "Color": "Dark Brown",
+//            "pHRange": "5.5 - 7.0",
+//            "AssociatedNutrients": "Organic matter, Carbon, Nitrogen, Phosphorus, Potassium",
+//            "FertilizerRecommendation": "Use balanced NPK fertilizers to provide essential nutrients to plants. Consider using slow-release fertilizers to reduce nutrient leaching in sandy soils.",
+//            "CropPlantRecommendation": "Beans, Peas, Sweet Potatoes, Carrots, Drought-resistant plants like Succulents and Cacti, Deep-rooted plants that can access water deeper in the soil.",
+//            "GeneralRecommendation": "Improve soil structure with organic matter to enhance water retention. Mulch the soil to reduce evaporation and maintain moisture."
+//        }
+//    """.trimIndent()
+//
+//    // Deserialize the JSON data into a SoilData object
+//    val soilData = Gson().fromJson(jsonString, SoilData::class.java)
+//
+//    // Call the callback function to update the state with the fetched data
+//    onSuccess(soilData)
+//}
 
 
 
