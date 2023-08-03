@@ -53,6 +53,10 @@ class AuthViewModel : ViewModel() {
         navigateTo("login")
     }
 
+    fun showDashboard() {
+        navigateTo("dashboard")
+    }
+
     fun signUp() {
         amplifyService.signUp(signUpState.value) {
             viewModelScope.launch(Dispatchers.Main) {

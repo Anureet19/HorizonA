@@ -175,6 +175,22 @@ fun SessionScreen(
                     letterSpacing = 0.08.em,
                     color = Color.Black
                 )
+                Button(
+                    onClick = viewModel::showDashboard,
+                    shape = RoundedCornerShape(60f),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF52B669))
+                ) {
+                    Text(
+                        text = "Go to Dashboard",
+                        fontFamily = averageSansFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        lineHeight = 23.sp,
+                        textAlign = TextAlign.Center,
+                        letterSpacing = 0.08.em,
+                        color = Color.White
+                    )
+                }
             }
 
             // Show downloaded image

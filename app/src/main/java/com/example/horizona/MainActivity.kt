@@ -69,8 +69,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DashboardScreen()
-//                    AppNavigator()
+//                    DashboardScreen()
+                    AppNavigator()
                 }
             }
         }
@@ -121,6 +121,9 @@ class MainActivity : ComponentActivity() {
                         ::uploadPhoto,
                         ::downloadPhoto
                     )
+                }
+                composable("dashboard") {
+                    DashboardScreen()
                 }
             }
         }
