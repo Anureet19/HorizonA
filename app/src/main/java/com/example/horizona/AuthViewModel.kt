@@ -77,6 +77,8 @@ class AuthViewModel : ViewModel() {
         amplifyService.login(loginState.value) {
             viewModelScope.launch(Dispatchers.Main) {
                 navigateTo("session")
+                // Reset the loginState values to clear the text fields
+                loginState.value = LoginState()
             }
         }
     }
