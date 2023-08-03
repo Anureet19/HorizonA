@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -54,6 +55,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -75,6 +77,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.amplifyframework.core.Amplify
+import com.google.gson.Gson
 import kotlinx.coroutines.delay
 
 @Composable
@@ -1106,26 +1109,157 @@ fun LoginScreen(viewModel: AuthViewModel) {
 //        }
 //    }
 //}
+//@Composable
+//fun DashboardScreen() {
+//    val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
+//    val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
+//
+//    // Dummy data for parameters
+//    val gravelPercentage = 30f
+//    val sandPercentage = 40f
+//    val soilPercentage = 30f
+//    val soilColor = remember { mutableStateOf("Brown") }
+//    val phLevelRange = remember { mutableStateOf("5.5 - 6.5") }
+//    val organicMatterLevel = remember { mutableStateOf("High") }
+//
+//    val screenPadding = with(LocalDensity.current) { 16.dp }
+//
+//    // Initialize the AuthViewModel
+//    val authViewModel: AuthViewModel = viewModel()
+//
+//    // Observe the username state
+//    val usernameState by rememberUpdatedState(newValue = authViewModel.signUpState.value.username)
+//
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.White)
+//            .padding(screenPadding)
+//    ) {
+//        LeftBox()
+//        RightBox()
+//        Column(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(top = 100.dp)
+//                .background(Color.White),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            // Image Holder
+//            Image(
+//                painter = painterResource(id = R.drawable.img),
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .size(200.dp)
+//                    .padding(top = 24.dp)
+//            )
+//
+//            Spacer(modifier = Modifier.height(16.dp))
+//            // Soil Type Pie Chart
+//            PieChart(
+//                gravelPercentage = gravelPercentage,
+//                sandPercentage = sandPercentage,
+//                soilPercentage = soilPercentage
+//            )
+//        }
+//
+//        // Soil Parameters Box
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .background(Color.LightGray)
+//                .padding(screenPadding)
+//        ) {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(8.dp)
+//            ) {
+//                // Soil Color
+//                Text(
+//                    text = "Soil Color: ${soilColor.value}",
+//                    fontFamily = averageSansFontFamily,
+//                    fontWeight = FontWeight.Normal,
+//                    fontSize = 18.sp,
+//                    color = Color.Black
+//                )
+//
+//                Spacer(modifier = Modifier.height(8.dp))
+//
+//                // PH Level Range
+//                Text(
+//                    text = "PH Level range: ${phLevelRange.value}",
+//                    fontFamily = averageSansFontFamily,
+//                    fontWeight = FontWeight.Normal,
+//                    fontSize = 18.sp,
+//                    color = Color.Black
+//                )
+//
+//                Spacer(modifier = Modifier.height(8.dp))
+//
+//                // Organic Matter Level
+//                Text(
+//                    text = "Organic Matter Level: ${organicMatterLevel.value}",
+//                    fontFamily = averageSansFontFamily,
+//                    fontWeight = FontWeight.Normal,
+//                    fontSize = 18.sp,
+//                    color = Color.Black
+//                )
+//            }
+//        }
+//    }
+//}
+//
+//
+//@Composable
+//fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Float) {
+//    val totalPercentage = gravelPercentage + sandPercentage + soilPercentage
+//    val canvasSize = 200.dp
+//    val centerOffset = with(LocalDensity.current) { Offset(canvasSize.toPx() / 2, canvasSize.toPx() / 2) }
+//    val radius = with(LocalDensity.current) { canvasSize.toPx() / 2 }
+//    val sweepAngles = listOf(
+//        gravelPercentage / totalPercentage * 360f,
+//        sandPercentage / totalPercentage * 360f,
+//        soilPercentage / totalPercentage * 360f
+//    )
+//
+//    Canvas(
+//        modifier = Modifier.size(canvasSize)
+//    ) {
+//        var startAngle = 0f
+//        sweepAngles.forEachIndexed { index, sweepAngle ->
+//            drawArc(
+//                color = when (index) {
+//                    0 -> Color(0xFFE91E63)
+//                    1 -> Color(0xFF03A9F4)
+//                    else -> Color(0xFF4CAF50)
+//                },
+//                startAngle = startAngle,
+//                sweepAngle = sweepAngle,
+//                useCenter = true,
+//                topLeft = centerOffset - Offset(radius, radius),
+//                size = Size(radius * 2, radius * 2),
+//            )
+//            startAngle += sweepAngle
+//        }
+//    }
+//}
+
+
 @Composable
 fun DashboardScreen() {
+    // State to hold the soil data fetched from the API
+    val soilDataState = remember { mutableStateOf<SoilData?>(null) }
+
+    // Fetch the data from the API. You need to replace this with the actual API call.
+    fetchSoilData { soilData ->
+        soilDataState.value = soilData
+    }
+
     val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
     val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
 
-    // Dummy data for parameters
-    val gravelPercentage = 30f
-    val sandPercentage = 40f
-    val soilPercentage = 30f
-    val soilColor = remember { mutableStateOf("Brown") }
-    val phLevelRange = remember { mutableStateOf("5.5 - 6.5") }
-    val organicMatterLevel = remember { mutableStateOf("High") }
-
     val screenPadding = with(LocalDensity.current) { 16.dp }
-
-    // Initialize the AuthViewModel
-    val authViewModel: AuthViewModel = viewModel()
-
-    // Observe the username state
-    val usernameState by rememberUpdatedState(newValue = authViewModel.signUpState.value.username)
 
     Box(
         modifier = Modifier
@@ -1133,70 +1267,121 @@ fun DashboardScreen() {
             .background(Color.White)
             .padding(screenPadding)
     ) {
-        LeftBox()
-        RightBox()
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 100.dp)
-                .background(Color.White),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Image Holder
-            Image(
-                painter = painterResource(id = R.drawable.img),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(top = 24.dp)
-            )
+        soilDataState.value?.let { soilData ->
+            LeftBox()
+            RightBox()
+            ScrollableContent(soilData = soilData, averageSansFontFamily = averageSansFontFamily)
+        }
+    }
+}
+
+@Composable
+fun ScrollableContent(soilData: SoilData, averageSansFontFamily: FontFamily) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 100.dp)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            // Image Holder (Assuming you have an image for the soil type)
+            // Replace "R.drawable.img" with the actual resource ID of the image
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                // Image Holder (Assuming you have an image for the soil type)
+                // Replace "R.drawable.img" with the actual resource ID of the image
+                Image(
+                    painter = painterResource(id = R.drawable.img),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(top = 24.dp)
+                )
+
+                // Soil Type Pie Chart
+                soilData.Composition?.let { composition ->
+                    PieChart(
+                        gravelPercentage = composition.Gravel.toFloat(),
+                        sandPercentage = composition.Sand.toFloat(),
+                        soilPercentage = composition.Silt.toFloat()
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
-            // Soil Type Pie Chart
-            PieChart(
-                gravelPercentage = gravelPercentage,
-                sandPercentage = sandPercentage,
-                soilPercentage = soilPercentage
-            )
-        }
 
-        // Soil Parameters Box
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.LightGray)
-                .padding(screenPadding)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
+            soilData.Color?.let { color ->
                 // Soil Color
                 Text(
-                    text = "Soil Color: ${soilColor.value}",
+                    text = "Soil Color: $color",
                     fontFamily = averageSansFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 18.sp,
                     color = Color.Black
                 )
+            }
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
+            soilData.pHRange?.let { pHRange ->
                 // PH Level Range
                 Text(
-                    text = "PH Level range: ${phLevelRange.value}",
+                    text = "PH Level range: $pHRange",
                     fontFamily = averageSansFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 18.sp,
                     color = Color.Black
                 )
+            }
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-                // Organic Matter Level
+            soilData.AssociatedNutrients?.let { nutrients ->
+                // Associated Nutrients
                 Text(
-                    text = "Organic Matter Level: ${organicMatterLevel.value}",
+                    text = "Associated Nutrients: $nutrients",
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            soilData.FertilizerRecommendation?.let { fertilizer ->
+                // Fertilizer Recommendation
+                Text(
+                    text = "Fertilizer Recommendation: $fertilizer",
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            soilData.CropPlantRecommendation?.let { cropPlant ->
+                // Crop/Plant Recommendation
+                Text(
+                    text = "Crop/Plant Recommendation: $cropPlant",
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            soilData.GeneralRecommendation?.let { generalRecommendation ->
+                // General Recommendation
+                Text(
+                    text = "General Recommendation: $generalRecommendation",
                     fontFamily = averageSansFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 18.sp,
@@ -1207,39 +1392,89 @@ fun DashboardScreen() {
     }
 }
 
-
 @Composable
 fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Float) {
     val totalPercentage = gravelPercentage + sandPercentage + soilPercentage
-    val canvasSize = 200.dp
+    val canvasSize = 150.dp
     val centerOffset = with(LocalDensity.current) { Offset(canvasSize.toPx() / 2, canvasSize.toPx() / 2) }
     val radius = with(LocalDensity.current) { canvasSize.toPx() / 2 }
-    val sweepAngles = listOf(
-        gravelPercentage / totalPercentage * 360f,
-        sandPercentage / totalPercentage * 360f,
-        soilPercentage / totalPercentage * 360f
-    )
+    val strokeWidth = with(LocalDensity.current) { 30.dp.toPx() } // Convert Dp to pixels
 
     Canvas(
         modifier = Modifier.size(canvasSize)
     ) {
         var startAngle = 0f
-        sweepAngles.forEachIndexed { index, sweepAngle ->
-            drawArc(
-                color = when (index) {
-                    0 -> Color(0xFFE91E63)
-                    1 -> Color(0xFF03A9F4)
-                    else -> Color(0xFF4CAF50)
-                },
-                startAngle = startAngle,
-                sweepAngle = sweepAngle,
-                useCenter = true,
-                topLeft = centerOffset - Offset(radius, radius),
-                size = Size(radius * 2, radius * 2),
-            )
-            startAngle += sweepAngle
-        }
+        drawArc(
+            color = Color.Transparent, // Use Transparent color for the center part
+            startAngle = 0f,
+            sweepAngle = 360f,
+            useCenter = false,
+            topLeft = centerOffset - Offset(radius, radius),
+            size = Size(radius * 2, radius * 2),
+            style = Stroke(width = strokeWidth)
+        )
+
+        drawArc(
+            color = Color(0xFFE91E63),
+            startAngle = startAngle,
+            sweepAngle = gravelPercentage / totalPercentage * 360f,
+            useCenter = false,
+            topLeft = centerOffset - Offset(radius, radius),
+            size = Size(radius * 2, radius * 2),
+            style = Stroke(width = strokeWidth)
+        )
+        startAngle += gravelPercentage / totalPercentage * 360f
+
+        drawArc(
+            color = Color(0xFF03A9F4),
+            startAngle = startAngle,
+            sweepAngle = sandPercentage / totalPercentage * 360f,
+            useCenter = false,
+            topLeft = centerOffset - Offset(radius, radius),
+            size = Size(radius * 2, radius * 2),
+            style = Stroke(width = strokeWidth)
+        )
+        startAngle += sandPercentage / totalPercentage * 360f
+
+        drawArc(
+            color = Color(0xFF4CAF50),
+            startAngle = startAngle,
+            sweepAngle = soilPercentage / totalPercentage * 360f,
+            useCenter = false,
+            topLeft = centerOffset - Offset(radius, radius),
+            size = Size(radius * 2, radius * 2),
+            style = Stroke(width = strokeWidth)
+        )
     }
+}
+
+
+// Replace this function with the actual API call to "/predict"
+fun fetchSoilData(onSuccess: (SoilData) -> Unit) {
+    // Simulating the data received from the API
+    val jsonString = """
+        {
+            "Category": "soil",
+            "Type": "Clay",
+            "Composition": {
+                "Gravel": 10.0,
+                "Sand": 80.0,
+                "Silt": 10.0
+            },
+            "Color": "Dark Brown",
+            "pHRange": "5.5 - 7.0",
+            "AssociatedNutrients": "Organic matter, Carbon, Nitrogen, Phosphorus, Potassium",
+            "FertilizerRecommendation": "Use balanced NPK fertilizers to provide essential nutrients to plants. Consider using slow-release fertilizers to reduce nutrient leaching in sandy soils.",
+            "CropPlantRecommendation": "Beans, Peas, Sweet Potatoes, Carrots, Drought-resistant plants like Succulents and Cacti, Deep-rooted plants that can access water deeper in the soil.",
+            "GeneralRecommendation": "Improve soil structure with organic matter to enhance water retention. Mulch the soil to reduce evaporation and maintain moisture."
+        }
+    """.trimIndent()
+
+    // Deserialize the JSON data into a SoilData object
+    val soilData = Gson().fromJson(jsonString, SoilData::class.java)
+
+    // Call the callback function to update the state with the fetched data
+    onSuccess(soilData)
 }
 
 
