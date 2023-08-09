@@ -1,5 +1,6 @@
 package com.example.horizona
 
+import android.graphics.Paint
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -58,6 +59,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -108,7 +110,8 @@ fun SessionScreen(
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(Color.White)
     ) {
         when (val state = imageState.value) {
@@ -163,6 +166,7 @@ fun SessionScreen(
                         color = Color.White
                     )
                 }
+                viewModel.selectedImageUri.value = state.imageUri
             }
 
             // Show Image Upload Success Message
@@ -438,9 +442,6 @@ fun ImageBackgroundScreen(viewModel: AuthViewModel) {
                 }
                 .then(line)
         )
-
-        val button1Clicked = remember { mutableStateOf(false) }
-        val button2Clicked = remember { mutableStateOf(false) }
 
         val button1Text = buildAnnotatedString {
             withStyle(style = SpanStyle(fontFamily = FontFamily(Font(R.font.aoboshi_one)), fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White)) {
@@ -933,7 +934,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                 ),
                 label = {
                     Text(
-                        text = "Email",
+                        text = "Username",
                         fontFamily = alatsiFontFamily,
                         fontWeight = FontWeight.Normal,
                         fontSize = 16.sp,
@@ -987,9 +988,21 @@ fun LoginScreen(viewModel: AuthViewModel) {
                     backgroundColor = Color.White
                 )
             )
+            var errorMessage = remember { mutableStateOf<String?>(null) }
 
             Button(
-                onClick = viewModel::login,
+                onClick = {
+                    // Call the login function and handle the result
+                    viewModel.login()
+                    if (viewModel.errorMessage.value == null) {
+                        viewModel.navigateTo("session")
+                        // Reset the loginState values to clear the text fields
+                        viewModel.updateLoginState()
+                    }else {
+                        // Update the errorMessage variable to display the error message
+                        errorMessage.value = viewModel.errorMessage.value
+                    }
+                },
                 modifier = Modifier
                     .width(248.dp)
                     .height(60.dp)
@@ -1006,6 +1019,15 @@ fun LoginScreen(viewModel: AuthViewModel) {
                     textAlign = TextAlign.Center,
                     letterSpacing = 0.08.em,
                     color = Color.White
+                )
+            }
+            if (errorMessage.value != null) {
+                Text(
+                    text = errorMessage.value ?: "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize(Alignment.Center),
+                    color = Color.Red
                 )
             }
 
@@ -1029,252 +1051,9 @@ fun LoginScreen(viewModel: AuthViewModel) {
     }
 }
 
-//@Composable
-//fun DashboardScreen() {
-//    val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
-//    val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
-//
-//    // Dummy data for parameters
-//    val soilTypeOptions = listOf("Gravel %", "Sand %", "Soil %")
-//    val soilColor = remember { mutableStateOf("Brown") }
-//    val phLevelRange = remember { mutableStateOf("5.5 - 6.5") }
-//    val organicMatterLevel = remember { mutableStateOf("High") }
-//
-//    LeftBox()
-//    RightBox()
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color.White),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        // Image Holder
-//        Image(
-//            painter = painterResource(id = R.drawable.img),
-//            contentDescription = null,
-//            modifier = Modifier
-//                .size(200.dp)
-//                .padding(top = 24.dp)
-//        )
-//
-//        // Soil Parameters Sublist
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(start = 16.dp, top = 16.dp)
-//        ) {
-//            // Soil Type Sublist
-//            Text(
-//                text = "Soil Type:",
-//                fontFamily = averageSansFontFamily,
-//                fontWeight = FontWeight.Normal,
-//                fontSize = 18.sp,
-//                lineHeight = 23.sp,
-//                textAlign = TextAlign.Center,
-//                letterSpacing = 0.08.em,
-//                color = Color.Black
-//            )
-//
-//            soilTypeOptions.forEach { option ->
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Box(
-//                        modifier = Modifier
-//                            .size(16.dp)
-//                            .background(Color.Gray)
-//                            .clip(CircleShape)
-//                    )
-//                    Spacer(modifier = Modifier.width(8.dp))
-//                    Text(
-//                        text = option,
-//                        fontFamily = averageSansFontFamily,
-//                        fontWeight = FontWeight.Normal,
-//                        fontSize = 16.sp,
-//                        lineHeight = 20.sp,
-//                        color = Color.Black
-//                    )
-//                }
-//                Spacer(modifier = Modifier.height(8.dp))
-//            }
-//
-//            // Soil Color
-//            Text(
-//                text = "Soil Color: ${soilColor.value}",
-//                fontFamily = averageSansFontFamily,
-//                fontWeight = FontWeight.Normal,
-//                fontSize = 18.sp,
-//                lineHeight = 23.sp,
-//                textAlign = TextAlign.Center,
-//                letterSpacing = 0.08.em,
-//                color = Color.Black
-//            )
-//
-//            // PH Level Range
-//            Text(
-//                text = "PH Level range: ${phLevelRange.value}",
-//                fontFamily = averageSansFontFamily,
-//                fontWeight = FontWeight.Normal,
-//                fontSize = 18.sp,
-//                lineHeight = 23.sp,
-//                textAlign = TextAlign.Center,
-//                letterSpacing = 0.08.em,
-//                color = Color.Black
-//            )
-//
-//            // Organic Matter Level
-//            Text(
-//                text = "Organic Matter Level: ${organicMatterLevel.value}",
-//                fontFamily = averageSansFontFamily,
-//                fontWeight = FontWeight.Normal,
-//                fontSize = 18.sp,
-//                lineHeight = 23.sp,
-//                textAlign = TextAlign.Center,
-//                letterSpacing = 0.08.em,
-//                color = Color.Black
-//            )
-//        }
-//    }
-//}
-//@Composable
-//fun DashboardScreen() {
-//    val averageSansFontFamily = FontFamily(Font(R.font.average_sans, FontWeight.Normal))
-//    val alatsiFontFamily = FontFamily(Font(R.font.alatsi))
-//
-//    // Dummy data for parameters
-//    val gravelPercentage = 30f
-//    val sandPercentage = 40f
-//    val soilPercentage = 30f
-//    val soilColor = remember { mutableStateOf("Brown") }
-//    val phLevelRange = remember { mutableStateOf("5.5 - 6.5") }
-//    val organicMatterLevel = remember { mutableStateOf("High") }
-//
-//    val screenPadding = with(LocalDensity.current) { 16.dp }
-//
-//    // Initialize the AuthViewModel
-//    val authViewModel: AuthViewModel = viewModel()
-//
-//    // Observe the username state
-//    val usernameState by rememberUpdatedState(newValue = authViewModel.signUpState.value.username)
-//
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color.White)
-//            .padding(screenPadding)
-//    ) {
-//        LeftBox()
-//        RightBox()
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(top = 100.dp)
-//                .background(Color.White),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            // Image Holder
-//            Image(
-//                painter = painterResource(id = R.drawable.img),
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .size(200.dp)
-//                    .padding(top = 24.dp)
-//            )
-//
-//            Spacer(modifier = Modifier.height(16.dp))
-//            // Soil Type Pie Chart
-//            PieChart(
-//                gravelPercentage = gravelPercentage,
-//                sandPercentage = sandPercentage,
-//                soilPercentage = soilPercentage
-//            )
-//        }
-//
-//        // Soil Parameters Box
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(Color.LightGray)
-//                .padding(screenPadding)
-//        ) {
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(8.dp)
-//            ) {
-//                // Soil Color
-//                Text(
-//                    text = "Soil Color: ${soilColor.value}",
-//                    fontFamily = averageSansFontFamily,
-//                    fontWeight = FontWeight.Normal,
-//                    fontSize = 18.sp,
-//                    color = Color.Black
-//                )
-//
-//                Spacer(modifier = Modifier.height(8.dp))
-//
-//                // PH Level Range
-//                Text(
-//                    text = "PH Level range: ${phLevelRange.value}",
-//                    fontFamily = averageSansFontFamily,
-//                    fontWeight = FontWeight.Normal,
-//                    fontSize = 18.sp,
-//                    color = Color.Black
-//                )
-//
-//                Spacer(modifier = Modifier.height(8.dp))
-//
-//                // Organic Matter Level
-//                Text(
-//                    text = "Organic Matter Level: ${organicMatterLevel.value}",
-//                    fontFamily = averageSansFontFamily,
-//                    fontWeight = FontWeight.Normal,
-//                    fontSize = 18.sp,
-//                    color = Color.Black
-//                )
-//            }
-//        }
-//    }
-//}
-//
-//
-//@Composable
-//fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Float) {
-//    val totalPercentage = gravelPercentage + sandPercentage + soilPercentage
-//    val canvasSize = 200.dp
-//    val centerOffset = with(LocalDensity.current) { Offset(canvasSize.toPx() / 2, canvasSize.toPx() / 2) }
-//    val radius = with(LocalDensity.current) { canvasSize.toPx() / 2 }
-//    val sweepAngles = listOf(
-//        gravelPercentage / totalPercentage * 360f,
-//        sandPercentage / totalPercentage * 360f,
-//        soilPercentage / totalPercentage * 360f
-//    )
-//
-//    Canvas(
-//        modifier = Modifier.size(canvasSize)
-//    ) {
-//        var startAngle = 0f
-//        sweepAngles.forEachIndexed { index, sweepAngle ->
-//            drawArc(
-//                color = when (index) {
-//                    0 -> Color(0xFFE91E63)
-//                    1 -> Color(0xFF03A9F4)
-//                    else -> Color(0xFF4CAF50)
-//                },
-//                startAngle = startAngle,
-//                sweepAngle = sweepAngle,
-//                useCenter = true,
-//                topLeft = centerOffset - Offset(radius, radius),
-//                size = Size(radius * 2, radius * 2),
-//            )
-//            startAngle += sweepAngle
-//        }
-//    }
-//}
-
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(imageUri: Uri?) {
     // State to hold the soil data fetched from the API
     var soilDataState = remember { mutableStateOf<SoilData?>(null) }
 
@@ -1315,7 +1094,9 @@ fun DashboardScreen() {
             // Show error message if there's an error
             Text(
                 text = errorMessage.value ?: "", // Use the value property to access the String value from MutableState
-                modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center),
                 color = Color.Red,
                 textAlign = TextAlign.Center
             )
@@ -1326,7 +1107,8 @@ fun DashboardScreen() {
                 RightBox()
                 ScrollableContent(
                     soilData = soilData,
-                    averageSansFontFamily = averageSansFontFamily
+                    averageSansFontFamily = averageSansFontFamily,
+                    imageUri = imageUri
                 )
             }
         }
@@ -1334,7 +1116,7 @@ fun DashboardScreen() {
 }
 
 @Composable
-fun ScrollableContent(soilData: SoilData, averageSansFontFamily: FontFamily) {
+fun ScrollableContent(soilData: SoilData, averageSansFontFamily: FontFamily, imageUri: Uri?) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -1351,99 +1133,267 @@ fun ScrollableContent(soilData: SoilData, averageSansFontFamily: FontFamily) {
             ) {
                 // Image Holder (Assuming you have an image for the soil type)
                 // Replace "R.drawable.img" with the actual resource ID of the image
-                Image(
-                    painter = painterResource(id = R.drawable.img),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(200.dp)
-                        .padding(top = 24.dp)
-                )
-
-                // Soil Type Pie Chart
-                soilData.Composition?.let { composition ->
-                    PieChart(
-                        gravelPercentage = composition.Gravel.toFloat(),
-                        sandPercentage = composition.Sand.toFloat(),
-                        soilPercentage = composition.Silt.toFloat()
+                imageUri?.let {
+                    Image(
+                        painter = rememberImagePainter(it),
+                        contentDescription = null,
+                        modifier = Modifier.size(200.dp)
                     )
+                }
+
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            soilData.Color?.let { color ->
+                // Soil Color
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Soil Color:")
+                        }
+                        append(" $color")
+                    },
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            soilData.Category?.let { category ->
+                // Soil Color
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Soil Category:")
+                        }
+                        append(" $category")
+                    },
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            PhScale()
+
+            Spacer(modifier = Modifier.height(6.dp))
+            soilData.pHRange?.let { pHRange ->
+                // PH Level Range
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("PH Level range:")
+                        }
+                        append(" $pHRange")
+                    },
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Nutrients
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(Color(0xFFFFE8D3))
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.nutrients), // Replace with your picture resource ID
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                    )
+                    // Associated Nutrients
+                    soilData.AssociatedNutrients?.let { nutrients ->
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Associated Nutrients:")
+                                }
+                                append(" $nutrients")
+                            },
+                            fontFamily = averageSansFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            color = Color.Black,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            soilData.Color?.let { color ->
-                // Soil Color
-                Text(
-                    text = "Soil Color: $color",
-                    fontFamily = averageSansFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    color = Color.Black
+            //Pie chart
+            soilData.Composition?.let { composition ->
+                PieChart(
+                    gravelPercentage = composition.Gravel.toFloat(),
+                    sandPercentage = composition.Sand.toFloat(),
+                    soilPercentage = composition.Silt.toFloat()
                 )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(Color(0xFFF2D8C9))
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.fertilizer), // Replace with your picture resource ID
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                    )
+                    // Associated Nutrients
+                    soilData.FertilizerRecommendation?.let { fertilizer ->
+                        // Fertilizer Recommendation
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Fertilizer Recommendation:")
+                                }
+                                append(" $fertilizer")
+                            },
+                            fontFamily = averageSansFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            color = Color.Black
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            soilData.pHRange?.let { pHRange ->
-                // PH Level Range
-                Text(
-                    text = "PH Level range: $pHRange",
-                    fontFamily = averageSansFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(Color(0xFFFFFFE0))
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.plant), // Replace with your picture resource ID
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                    )
+                    // Associated Nutrients
+                    soilData.CropPlantRecommendation?.let { cropPlant ->
+                        // Crop/Plant Recommendation
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("Crop/Plant Recommendation:")
+                                }
+                                append(" $cropPlant")
+                            },
+                            fontFamily = averageSansFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            color = Color.Black
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            soilData.AssociatedNutrients?.let { nutrients ->
-                // Associated Nutrients
-                Text(
-                    text = "Associated Nutrients: $nutrients",
-                    fontFamily = averageSansFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(Color(0xFFCDDC39))
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.recommendation), // Replace with your picture resource ID
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                    )
+                    // Associated Nutrients
+                    soilData.GeneralRecommendation?.let { generalRecommendation ->
+                        // General Recommendation
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append("General Recommendation:")
+                                }
+                                append(" $generalRecommendation")
+                            },
+                            fontFamily = averageSansFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            color = Color.Black
+                        )
+                    }
+                }
             }
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(8.dp))
+@Composable
+fun PhScale() {
+    val phColors = listOf(
+        Color.Red,       // pH 1
+        Color(0xFFCC0033), // pH 2
+        Color(0xFFCC0033), // pH 3
+        Color(0xFFCC3300), // pH 4
+        Color(0xFFCC3300), // pH 5
+        Color(0xFFFF6600), // pH 6
+        Color(0xFFFF6600), // pH 7
+        Color(0xFFFF9900), // pH 8
+        Color(0xFFFF9900), // pH 9
+        Color(0xFFCCCC00), // pH 10
+        Color(0xFFCCCC00), // pH 11
+        Color(0xFF99CC00), // pH 12
+        Color(0xFF99CC00), // pH 13
+        Color.Green,     // pH 14
+    )
 
-            soilData.FertilizerRecommendation?.let { fertilizer ->
-                // Fertilizer Recommendation
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        for (pH in 1..14) {
+            Box(
+                modifier = Modifier
+                    .width(25.dp)
+                    .height(50.dp)
+                    .background(phColors[pH - 1]),
+                contentAlignment = Alignment.BottomCenter
+            ) {
                 Text(
-                    text = "Fertilizer Recommendation: $fertilizer",
-                    fontFamily = averageSansFontFamily,
+                    text = "$pH",
+                    fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            soilData.CropPlantRecommendation?.let { cropPlant ->
-                // Crop/Plant Recommendation
-                Text(
-                    text = "Crop/Plant Recommendation: $cropPlant",
-                    fontFamily = averageSansFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    color = Color.Black
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            soilData.GeneralRecommendation?.let { generalRecommendation ->
-                // General Recommendation
-                Text(
-                    text = "General Recommendation: $generalRecommendation",
-                    fontFamily = averageSansFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    color = Color.Black
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
         }
@@ -1473,7 +1423,7 @@ fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Flo
         )
 
         drawArc(
-            color = Color(0xFFE91E63),
+            color = Color(0xFF4CAF50),
             startAngle = startAngle,
             sweepAngle = gravelPercentage / totalPercentage * 360f,
             useCenter = false,
@@ -1484,7 +1434,7 @@ fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Flo
         startAngle += gravelPercentage / totalPercentage * 360f
 
         drawArc(
-            color = Color(0xFF03A9F4),
+            color = Color(0xFF8BC34A),
             startAngle = startAngle,
             sweepAngle = sandPercentage / totalPercentage * 360f,
             useCenter = false,
@@ -1495,7 +1445,7 @@ fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Flo
         startAngle += sandPercentage / totalPercentage * 360f
 
         drawArc(
-            color = Color(0xFF4CAF50),
+            color = Color(0xFFCDDC39),
             startAngle = startAngle,
             sweepAngle = soilPercentage / totalPercentage * 360f,
             useCenter = false,
@@ -1503,33 +1453,61 @@ fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Flo
             size = Size(radius * 2, radius * 2),
             style = Stroke(width = strokeWidth)
         )
+
+        // Draw the text on the right side of the pie chart
+        val centerX = centerOffset.x + radius + 20.dp.toPx() // Offset for text position
+        var centerY = centerOffset.y - radius // Initial Y position
+
+        // Gravel text
+        drawContext.canvas.nativeCanvas.drawText(
+            "Gravel: ${gravelPercentage.toInt()}%",
+            centerX,
+            centerY,
+            Paint().apply {
+                color = android.graphics.Color.BLACK
+                textSize = 14.sp.toPx()
+            }
+        )
+        centerY += 30.dp.toPx()
+
+        // Sand text
+        drawContext.canvas.nativeCanvas.drawText(
+            "Sand: ${sandPercentage.toInt()}%",
+            centerX,
+            centerY,
+            Paint().apply {
+                color = android.graphics.Color.BLACK
+                textSize = 14.sp.toPx()
+            }
+        )
+        centerY += 30.dp.toPx()
+
+        // Soil text
+        drawContext.canvas.nativeCanvas.drawText(
+            "Soil: ${soilPercentage.toInt()}%",
+            centerX,
+            centerY,
+            Paint().apply {
+                color = android.graphics.Color.BLACK
+                textSize = 14.sp.toPx()
+            }
+        )
     }
 }
 
-//suspend fun fetchSoilData(onSuccess: (SoilData) -> Unit) {
-//    Log.e("dhruv", "In the function")
-//    val client = HttpClient {
-//        install(JsonFeature) {
-//            serializer = KotlinxSerializer()
-//        }
-//    }
-//
-//    try {
-//        // Make the API call using ktor-client within a coroutine
-//        val soilData: SoilData = withContext(Dispatchers.IO) {
-//            client.get("http://192.168.0.147:5000/predict")
-//        }
-//        Log.e("dhruv", "Successfully made API call")
-//
-//        // Call the callback function to update the state with the fetched data
-//        onSuccess(soilData)
-//    } catch (e: Exception) {
-//        // Handle any exceptions or errors that may occur during the API call
-//        e.printStackTrace()
-//    } finally {
-//        client.close()
-//    }
-//}
+@Composable
+private fun drawSimpleText(
+    text: String,
+    position: Offset,
+    color: Color
+) {
+    Text(
+        text = text,
+        color = color,
+        style = TextStyle.Default.copy(fontSize = 14.sp),
+        modifier = Modifier.offset(position.x.dp, position.y.dp)
+    )
+}
 
 suspend fun fetchSoilData(onSuccess: (SoilData) -> Unit, onError: (String) -> Unit) {
     val client = HttpClient {
@@ -1540,8 +1518,8 @@ suspend fun fetchSoilData(onSuccess: (SoilData) -> Unit, onError: (String) -> Un
 
     try {
         // Make the API call using ktor-client
-        val soilData: SoilData = client.get("http://192.168.0.147:5000/predict")
-
+        val soilData: SoilData = client.get("http://10.71.115.96:5000/predict")
+//        192.168.0.147
         // Call the callback function to update the state with the fetched data
         onSuccess(soilData)
     } catch (e: Exception) {
@@ -1554,36 +1532,6 @@ suspend fun fetchSoilData(onSuccess: (SoilData) -> Unit, onError: (String) -> Un
     }
 }
 
-
-
-
-// Replace this function with the actual API call to "/predict"
-//fun fetchSoilData(onSuccess: (SoilData) -> Unit) {
-//    // Simulating the data received from the API
-//    val jsonString = """
-//        {
-//            "Category": "soil",
-//            "Type": "Clay",
-//            "Composition": {
-//                "Gravel": 10.0,
-//                "Sand": 80.0,
-//                "Silt": 10.0
-//            },
-//            "Color": "Dark Brown",
-//            "pHRange": "5.5 - 7.0",
-//            "AssociatedNutrients": "Organic matter, Carbon, Nitrogen, Phosphorus, Potassium",
-//            "FertilizerRecommendation": "Use balanced NPK fertilizers to provide essential nutrients to plants. Consider using slow-release fertilizers to reduce nutrient leaching in sandy soils.",
-//            "CropPlantRecommendation": "Beans, Peas, Sweet Potatoes, Carrots, Drought-resistant plants like Succulents and Cacti, Deep-rooted plants that can access water deeper in the soil.",
-//            "GeneralRecommendation": "Improve soil structure with organic matter to enhance water retention. Mulch the soil to reduce evaporation and maintain moisture."
-//        }
-//    """.trimIndent()
-//
-//    // Deserialize the JSON data into a SoilData object
-//    val soilData = Gson().fromJson(jsonString, SoilData::class.java)
-//
-//    // Call the callback function to update the state with the fetched data
-//    onSuccess(soilData)
-//}
 
 
 

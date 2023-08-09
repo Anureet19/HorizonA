@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
     private val getImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { imageState.value = ImageState.ImageSelected(it) }
     }
+
     private val viewModel by viewModels<AuthViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,7 +124,8 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable("dashboard") {
-                    DashboardScreen()
+                    var state = imageState.value
+                    DashboardScreen(imageUri = viewModel.selectedImageUri.value)
                 }
             }
         }

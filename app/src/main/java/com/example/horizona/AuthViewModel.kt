@@ -2,9 +2,12 @@ package com.example.horizona
 
 import android.content.Context
 import android.location.Address
+import android.net.Uri
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amplifyframework.auth.AuthException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -12,6 +15,9 @@ class AuthViewModel : ViewModel() {
     private val amplifyService: AmplifyService = AmplifyServiceImpl()
 
     lateinit var navigateTo: (String) -> Unit
+
+    var selectedImageUri: MutableState<Uri?> = mutableStateOf(null)
+        private set
 
     var loginState = mutableStateOf(LoginState())
         private set
@@ -73,14 +79,44 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    var errorMessage = mutableStateOf<String?>(null)
+        private set
     fun login() {
-        amplifyService.login(loginState.value) {
-            viewModelScope.launch(Dispatchers.Main) {
-                navigateTo("session")
-                // Reset the loginState values to clear the text fields
-                loginState.value = LoginState()
-            }
+        errorMessage.value = null
+
+        val email = loginState.value.email
+        val password = loginState.value.password
+
+        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
+            errorMessage.value = "Please enter both email and password."
+            return
         }
+        try {
+            amplifyService.login(loginState.value) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    navigateTo("session")
+                    // Reset the loginState values to clear the text fields
+                    loginState.value = LoginState()
+                }
+            }
+        }catch (e: AuthException) {
+            // Handle AuthException and set appropriate error message
+            when (e) {
+                is AuthException.UserNotFoundException -> {
+                    errorMessage.value = "User not found. Please check your email and password."
+                }
+                is AuthException.InvalidPasswordException -> {
+                    errorMessage.value = "Invalid password. Please check your password."
+                }
+                else -> {
+                    errorMessage.value = "Network Error"
+                }
+            }
+        } catch (e: Exception) {
+            // Handle other exceptions and set a generic error message
+            errorMessage.value = "Network Error"
+        }
+
     }
 
     fun logOut() {
