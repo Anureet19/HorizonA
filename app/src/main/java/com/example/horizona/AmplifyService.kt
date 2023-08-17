@@ -24,9 +24,9 @@ class AmplifyServiceImpl : AmplifyService {
         try {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
             Amplify.configure(context)
-            Log.i("KILO", "Configured amplify")
+            Log.i("Problem Encountered", "Configured amplify")
         } catch (e: Exception) {
-            Log.e("KILO", "Amplify configuration failed", e)
+            Log.e("Problem Encountered", "Amplify configuration failed", e)
         }
     }
 
@@ -37,7 +37,7 @@ class AmplifyServiceImpl : AmplifyService {
 
         Amplify.Auth.signUp(state.username, state.password, options,
             { onComplete() },
-            { Log.e("KILO", "Sign Up Error:", it) }
+            { Log.e("Problem Encountered", "Sign Up Error:", it) }
         )
     }
 
@@ -46,7 +46,7 @@ class AmplifyServiceImpl : AmplifyService {
             state.username,
             state.code,
             { onComplete() },
-            { Log.e("KILO", "Verification Failed: ", it) }
+            { Log.e("Problem Encountered", "Verification Failed: ", it) }
         )
     }
 
@@ -55,14 +55,14 @@ class AmplifyServiceImpl : AmplifyService {
             state.email,
             state.password,
             { onComplete() },
-            { Log.e("KILO", "Login Error:", it) }
+            { Log.e("Problem Encountered", "Login Error:", it) }
         )
     }
 
     override fun logOut(onComplete: () -> Unit) {
         Amplify.Auth.signOut(
             { onComplete() },
-            { Log.e("KILO", "Sign Out Failed: ", it) }
+            { Log.e("Problem Encountered", "Sign Out Failed: ", it) }
         )
     }
 }

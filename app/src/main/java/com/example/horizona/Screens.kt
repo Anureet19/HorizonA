@@ -30,17 +30,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -49,7 +43,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -78,18 +71,12 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
-import com.amplifyframework.core.Amplify
-import com.google.gson.Gson
 import io.ktor.client.HttpClient
-import io.ktor.client.features.get
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 
 @Composable
 fun SessionScreen(
@@ -231,7 +218,10 @@ fun VerificationCodeScreen(viewModel: AuthViewModel) {
         LeftBox()
         RightBox()
         Column(
-            verticalArrangement = Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(
+                10.dp,
+                alignment = Alignment.CenterVertically
+            ),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
@@ -444,13 +434,27 @@ fun ImageBackgroundScreen(viewModel: AuthViewModel) {
         )
 
         val button1Text = buildAnnotatedString {
-            withStyle(style = SpanStyle(fontFamily = FontFamily(Font(R.font.aoboshi_one)), fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White)) {
+            withStyle(
+                style = SpanStyle(
+                    fontFamily = FontFamily(Font(R.font.aoboshi_one)),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+            ) {
                 append("Signin as Guest")
             }
         }
 
         val button2Text = buildAnnotatedString {
-            withStyle(style = SpanStyle(fontFamily = FontFamily(Font(R.font.aoboshi_one)), fontWeight = FontWeight.Normal, fontSize = 16.sp, color = Color.White)) {
+            withStyle(
+                style = SpanStyle(
+                    fontFamily = FontFamily(Font(R.font.aoboshi_one)),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+            ) {
                 append("Signup")
             }
         }
@@ -510,7 +514,8 @@ fun ImageBackgroundScreen(viewModel: AuthViewModel) {
         }
         ClickableText(
             text = AnnotatedString("Already have an account? Login"),
-            onClick = { viewModel.showLogin()
+            onClick = {
+                viewModel.showLogin()
                 // Handle click event
             },
             modifier = Modifier
@@ -740,7 +745,7 @@ fun TextFields(modifier: Modifier = Modifier, state: SignUpState, viewModel: Aut
 
         OutlinedTextField(
             value = state.phoneNumber,
-            onValueChange = {  viewModel.updateSignUpState(phoneNumber = it) },
+            onValueChange = { viewModel.updateSignUpState(phoneNumber = it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = screenPadding, top = screenPadding),
@@ -998,7 +1003,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                         viewModel.navigateTo("session")
                         // Reset the loginState values to clear the text fields
                         viewModel.updateLoginState()
-                    }else {
+                    } else {
                         // Update the errorMessage variable to display the error message
                         errorMessage.value = viewModel.errorMessage.value
                     }
@@ -1033,7 +1038,8 @@ fun LoginScreen(viewModel: AuthViewModel) {
 
             ClickableText(
                 text = AnnotatedString("Don't have an account? Sign up"),
-                onClick = { offset -> viewModel.showSignUp()
+                onClick = { offset ->
+                    viewModel.showSignUp()
                     // Handle click event
                 },
                 modifier = Modifier
@@ -1057,10 +1063,6 @@ fun DashboardScreen(imageUri: Uri?) {
     // State to hold the soil data fetched from the API
     var soilDataState = remember { mutableStateOf<SoilData?>(null) }
 
-    // Fetch the data from the API. You need to replace this with the actual API call.
-//    fetchSoilData { soilData ->
-//        soilDataState.value = soilData
-//    }
     // Coroutine to fetch the data from the API
     var errorMessage = remember { mutableStateOf<String?>(null) }
 
@@ -1093,7 +1095,8 @@ fun DashboardScreen(imageUri: Uri?) {
             Log.d("dhruv error message", errorMessage.toString())
             // Show error message if there's an error
             Text(
-                text = errorMessage.value ?: "", // Use the value property to access the String value from MutableState
+                text = errorMessage.value
+                    ?: "", // Use the value property to access the String value from MutableState
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center),
@@ -1125,14 +1128,10 @@ fun ScrollableContent(soilData: SoilData, averageSansFontFamily: FontFamily, ima
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            // Image Holder (Assuming you have an image for the soil type)
-            // Replace "R.drawable.img" with the actual resource ID of the image
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Image Holder (Assuming you have an image for the soil type)
-                // Replace "R.drawable.img" with the actual resource ID of the image
                 imageUri?.let {
                     Image(
                         painter = rememberImagePainter(it),
@@ -1163,7 +1162,7 @@ fun ScrollableContent(soilData: SoilData, averageSansFontFamily: FontFamily, ima
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            soilData.Category?.let { category ->
+            soilData.Category.let { category ->
                 // Soil Color
                 Text(
                     text = buildAnnotatedString {
@@ -1171,6 +1170,24 @@ fun ScrollableContent(soilData: SoilData, averageSansFontFamily: FontFamily, ima
                             append("Soil Category:")
                         }
                         append(" $category")
+                    },
+                    fontFamily = averageSansFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            soilData.Type.let { type ->
+                // Soil Type
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Soil Type:")
+                        }
+                        append(" $type")
                     },
                     fontFamily = averageSansFontFamily,
                     fontWeight = FontWeight.Normal,
@@ -1404,7 +1421,8 @@ fun PhScale() {
 fun PieChart(gravelPercentage: Float, sandPercentage: Float, soilPercentage: Float) {
     val totalPercentage = gravelPercentage + sandPercentage + soilPercentage
     val canvasSize = 150.dp
-    val centerOffset = with(LocalDensity.current) { Offset(canvasSize.toPx() / 2, canvasSize.toPx() / 2) }
+    val centerOffset =
+        with(LocalDensity.current) { Offset(canvasSize.toPx() / 2, canvasSize.toPx() / 2) }
     val radius = with(LocalDensity.current) { canvasSize.toPx() / 2 }
     val strokeWidth = with(LocalDensity.current) { 30.dp.toPx() } // Convert Dp to pixels
 
@@ -1518,13 +1536,12 @@ suspend fun fetchSoilData(onSuccess: (SoilData) -> Unit, onError: (String) -> Un
 
     try {
         // Make the API call using ktor-client
-        val soilData: SoilData = client.get("http://10.71.115.96:5000/predict")
-//        192.168.0.147
+        val soilData: SoilData = client.get("/predict") // Replace it with the URL
         // Call the callback function to update the state with the fetched data
         onSuccess(soilData)
     } catch (e: Exception) {
         // Handle any exceptions or errors that may occur during the API call
-        Log.e("Api fuck hogyi", e.toString())
+        Log.e("API encountered a problem", e.toString())
         onError("Failed to fetch soil data. Please try again later.")
         e.printStackTrace()
     } finally {
